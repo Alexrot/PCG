@@ -5,12 +5,12 @@ using UnityEngine;
 public class Node 
 {
     public Vector2f position;
-    public Arc[] edges;
+    public List<Arc> edges;
     public int countArc;
     public Node(Vector2f position)
     {
         this.position = position;
-        edges = new Arc[99];
+        edges = new List<Arc>();
         countArc = 0;
     }
 
@@ -18,11 +18,14 @@ public class Node
     public void AddEdge(Node a, Node b)
     {
         edges[countArc] = new Arc(2, a, b);
-
+        countArc++;
     }
 
-    public void RemuveEdge()
+    public void RemoveArc(Arc c)
     {
+
+                edges.Remove(c);
+                countArc--;
 
     }
 }
