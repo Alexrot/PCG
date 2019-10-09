@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class Graph
+public class Graph
 {
         List<Node> nodes;
 

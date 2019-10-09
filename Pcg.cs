@@ -98,7 +98,7 @@ public class Pcg : MonoBehaviour
      * funzione che passa in rassegna tutte le linee per capire quale appartiene a quale punto
      * NB: ogni linea ha 2 genitori per ridurre il numero di ricerche potrebbe essere una buona idea settare un contatore che controlla se una linea ha ancora dei genitori,
      * in caso contrario possiamo eliminarla dalla lista delle linee senza problema
-     * per presumendo di salvare le linee in ordine crescente di posizione nel grafo
+     *  presumendo di salvare le linee in ordine crescente di posizione nel grafo
      *      es: x(1,1) y(1,2) precede nell'array x(2,2) y(2,3)
      *  e presumendo che questo valga anche per i punti 
      *  possiamo iniziare a generare i poligoni partendo dall'angolo superiore sinistro a scendere
