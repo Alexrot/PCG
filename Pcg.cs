@@ -10,6 +10,7 @@ public class Pcg : MonoBehaviour
 {
 
     int polygonNumber=100;
+    VoronoiToGraph vtg;
 
     private Dictionary<Vector2f, Site> puntiLloyd;
     private List<Edge> archiDelGrafo;
@@ -24,21 +25,10 @@ public class Pcg : MonoBehaviour
         Voronoi voronoi = new Voronoi(points, bounds, 5);
         puntiLloyd = voronoi.SitesIndexedByLocation;
         archiDelGrafo = voronoi.Edges;
-        GeneraGrafo(archiDelGrafo);
+        vtg.GeneraGrafo(archiDelGrafo, 512f);
     }
 
-    void GeneraGrafo(List<Edge> archiDelGrafo)
-    {
-        foreach (Edge edge in archiDelGrafo)
-        {
-            // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
-            if (edge.ClippedEnds == null) continue;
 
-            Graph poligoni = new Graph();
-            poligoni.AddArco(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT]);
-            
-        }
-    }
 
 
 

@@ -14,10 +14,16 @@ class Graph
 
 
 
-        public void AddNode(Vector2f n)
+        public Node AddNode(Vector2f n)
         {
-        Node c = new Node(n);
+            
+            Node c = new Node(n);
+            if (!FindNode(c))
+            {
             nodes.Add(c);
+            }
+            
+        return c;
         }
 
 
@@ -33,7 +39,6 @@ class Graph
 
 
 
-
         public void AddEdge(Node a, Node b)
         {
             if(FindNode(a) || FindNode(b))
@@ -44,25 +49,58 @@ class Graph
                 {
                     if (nodes[i] == a)
                     {
-                        nodes[i].AddEdge(a, b);
+                        nodes[i].AddEdgeToNode(a, b);
                     }
                     if (nodes[i] == b)
                     {
-                        nodes[i].AddEdge(a, b);
+                        nodes[i].AddEdgeToNode(a, b);
                     }
                 }
             }
         }
 
-
+    
+    
 
     public void Delete(Node c)
     {
         nodes.Remove(c);
-        DeleteEdge(c);
-        
-        
+        DeleteEdge(c);  
     }
+
+    public Node FindClose(Node position, bool vertORorizon)
+    {
+        Vector2f newNode = position.position;
+        bool searchForNode = true;
+        Node temp;
+        while (searchForNode)
+        {
+            if (vertORorizon)
+            {//x++
+                newNode.x+=0.01f;
+                //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
+                 temp = new Node(newNode);
+                if (FindNode(temp))
+                {
+                    return temp;
+                }
+            }
+            else
+            {//y++
+                newNode.y += 0.01f;
+                //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
+                temp = new Node(newNode);
+                if (FindNode(temp))
+                {
+                    return temp;
+                }
+            }
+        }
+        return null;
+    }
+
+
+
 
 
     //cancella tutti gli archi del nodo c

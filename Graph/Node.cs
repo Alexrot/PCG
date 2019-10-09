@@ -15,9 +15,14 @@ public class Node
     }
 
 
-    public void AddEdge(Node a, Node b)
+    public void AddEdgeToNode(Node a, Node b)
     {
-        edges[countArc] = new Arc(2, a, b);
+        Arc c = new Arc(2, a, b);
+        if (!FindEdge(c))
+        {
+            edges[countArc] = c;
+        }
+        
         countArc++;
     }
 
@@ -27,5 +32,11 @@ public class Node
                 edges.Remove(c);
                 countArc--;
 
+    }
+
+
+    private bool FindEdge(Arc c)
+    {
+        return edges.Contains(c);
     }
 }
