@@ -58,9 +58,30 @@ public class Graph
                 }
             }
         }
+    
+    //si usa per gli archi sui bordi
+    public void AddEdgeLimit(Node a, Node b)
+    {
+        if (FindNode(a) || FindNode(b))
+        {
+            //aggiungo l'arco ad entrabi i nodi senza fregarmene dell'ardine perche non e ordinato il grafo
 
-    
-    
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] == a)
+                {
+                    nodes[i].AddEdgeToNodeLimit(a, b);
+                }
+                if (nodes[i] == b)
+                {
+                    nodes[i].AddEdgeToNodeLimit(a, b);
+                }
+            }
+        }
+    }
+
+
+
 
     public void Delete(Node c)
     {

@@ -24,6 +24,7 @@ public class VoronoiToGraph : MonoBehaviour
 
 
 
+    //genera il grafo dei nodi interni
     public void  GeneraGrafo(List<Edge> archiDelGrafo, float maxCanvas)
     {
         this.maxCanvas = maxCanvas;
@@ -68,7 +69,7 @@ public class VoronoiToGraph : MonoBehaviour
                 if (temp1.position != altoDx.position)
                 {//da in alto a sx fino a in alto a dx
 
-                    poligoni.AddEdge(temp1, temp = poligoni.FindClose(temp1, true));
+                    poligoni.AddEdgeLimit(temp1, temp = poligoni.FindClose(temp1, true));
                     temp1 = temp;
                 }
                 else
@@ -78,7 +79,7 @@ public class VoronoiToGraph : MonoBehaviour
                 if (temp2.position != bassoDx.position)
                 {//da in basso a sx fino a in basso a dx
 
-                    poligoni.AddEdge(temp2, temp = poligoni.FindClose(temp2, true));
+                    poligoni.AddEdgeLimit(temp2, temp = poligoni.FindClose(temp2, true));
                     temp2 = temp;
                 }
                 else
@@ -99,7 +100,7 @@ public class VoronoiToGraph : MonoBehaviour
             {
                 if (temp1.position == bassoSx.position)
                 {//da in alto a sx fino a in basso a sx 
-                    poligoni.AddEdge(temp1, temp = poligoni.FindClose(temp1, false));
+                    poligoni.AddEdgeLimit(temp1, temp = poligoni.FindClose(temp1, false));
                     temp1 = temp;
                 }
                 else
@@ -108,7 +109,7 @@ public class VoronoiToGraph : MonoBehaviour
                 }
                 if (temp2.position == bassoDx.position)
                 {//da in alto a dx fino a in basso a dx
-                    poligoni.AddEdge(temp2, temp = poligoni.FindClose(temp1, false));
+                    poligoni.AddEdgeLimit(temp2, temp = poligoni.FindClose(temp1, false));
                     temp2 = temp;
                 }
                 else

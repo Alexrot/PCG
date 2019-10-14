@@ -39,4 +39,24 @@ public class Node
     {
         return edges.Contains(c);
     }
+
+    //si usa per gli archi sui bordi
+    public void AddEdgeToNodeLimit(Node a, Node b)
+    {
+        Arc c = new Arc(1, a, b);
+        if (!FindEdge(c))
+        {
+            edges[countArc] = c;
+        }
+
+        countArc++;
+    }
+
+    public List<Arc> GetArcs()
+    {
+        return edges;
+    }
+
+
+    
 }

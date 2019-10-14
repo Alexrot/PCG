@@ -25,7 +25,7 @@ public class VoronoiDiagram : MonoBehaviour
 
         // There is a two ways you can create the voronoi diagram: with or without the lloyd relaxation
         // Here I used it with 2 iterations of the lloyd relaxation
-        Voronoi voronoi = new Voronoi(points, bounds, 5);
+        Voronoi voronoi = new Voronoi(points, bounds, 1000);
 
         // But you could also create it without lloyd relaxtion and call that function later if you want
         //Voronoi voronoi = new Voronoi(points,bounds);
@@ -86,8 +86,8 @@ public class VoronoiDiagram : MonoBehaviour
         int sy = y0 < y1 ? 1 : -1;
         int err = dx - dy;
 
-        Debug.Log("linea da:" +x0 +" x "+ x1);
-        Debug.Log("a:" + y0 + " y " + y1);
+        Debug.Log("linea da: x" +x0 +" y "+ y0);
+        Debug.Log("a: x" + x1 + " y " + y1);
 
         while (true)
         {

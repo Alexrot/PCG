@@ -14,4 +14,8 @@ public class Arc
         this.a = a;
         this.b = b;
     }
+
+    public Node GetA() { return a; }
+    public Node GetB() { return b; }
+    public int GetValue() { return value; }
 }
