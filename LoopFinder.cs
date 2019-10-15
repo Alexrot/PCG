@@ -38,7 +38,19 @@ public class LoopFinder : MonoBehaviour
     }
 
 
+    void Bfs(Node a)
+    {
+        ///passo un nodo
+        ///prendo tutti i nodi cicini e li metto all interno di una matrice al secondo livello
+        ///prendo tutti i nodi vicini a quelli del secondo livello e li metto nel liv 3
+        ///controllo che non ci siano nodi duplicati 
+        ///     se ci sono abbiamo trovato un nodo
+        ///     
+        Node[,] matLoop=new Node[30,30];
+        int i=0, k = 0;
+        matLoop[i,k] = a;
 
+    }
 
 
 
@@ -57,21 +69,21 @@ public class LoopFinder : MonoBehaviour
     /// </summary>
     /// <returns></returns>
 
-/*
-    bool Loop()
-    {
-        for(int i=0; i<arcToLoop.Count; i++)
-        while (true)
+    /*
+        bool Loop()
         {
-            if (a.GetArcs&&)
-            break;
+            for(int i=0; i<arcToLoop.Count; i++)
+            while (true)
+            {
+                if (a.GetArcs&&)
+                break;
+            }
+            return true;
         }
-        return true;
-    }
 
 
 
-    */
+        */
 
 
 

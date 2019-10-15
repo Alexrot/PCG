@@ -25,7 +25,7 @@ public class VoronoiDiagram : MonoBehaviour
 
         // There is a two ways you can create the voronoi diagram: with or without the lloyd relaxation
         // Here I used it with 2 iterations of the lloyd relaxation
-        Voronoi voronoi = new Voronoi(points, bounds, 1000);
+        Voronoi voronoi = new Voronoi(points, bounds, 2);
 
         // But you could also create it without lloyd relaxtion and call that function later if you want
         //Voronoi voronoi = new Voronoi(points,bounds);

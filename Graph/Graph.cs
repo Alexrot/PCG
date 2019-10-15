@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 public class Graph
 {
-        List<Node> nodes;
+    List<Node> nodes;
+    List<Arc> arcs;
 
 
-        public Graph(int max)
+    public Graph(int max)
         {
             nodes = new List<Node>();
         }
@@ -44,16 +45,18 @@ public class Graph
             if(FindNode(a) || FindNode(b))
             {
             //aggiungo l'arco ad entrabi i nodi senza fregarmene dell'ardine perche non e ordinato il grafo
-            
+            Arc temp = new Arc(2, a, b);
+            arcs.Add(temp);
+
                 for(int i=0;i<nodes.Count; i++)
                 {
                     if (nodes[i] == a)
                     {
-                        nodes[i].AddEdgeToNode(a, b);
+                        nodes[i].AddEdgeToNode(ref temp);
                     }
                     if (nodes[i] == b)
                     {
-                        nodes[i].AddEdgeToNode(a, b);
+                        nodes[i].AddEdgeToNode(ref temp);
                     }
                 }
             }
@@ -64,17 +67,19 @@ public class Graph
     {
         if (FindNode(a) || FindNode(b))
         {
+            Arc temp = new Arc(1, a, b);
+            arcs.Add(temp);
             //aggiungo l'arco ad entrabi i nodi senza fregarmene dell'ardine perche non e ordinato il grafo
 
             for (int i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i] == a)
                 {
-                    nodes[i].AddEdgeToNodeLimit(a, b);
+                    nodes[i].AddEdgeToNode(ref temp);
                 }
                 if (nodes[i] == b)
                 {
-                    nodes[i].AddEdgeToNodeLimit(a, b);
+                    nodes[i].AddEdgeToNode(ref temp);
                 }
             }
         }
@@ -85,8 +90,10 @@ public class Graph
 
     public void Delete(Node c)
     {
+        DeleteEdge(c.connectedArc(c));
         nodes.Remove(c);
-        DeleteEdge(c);  
+        
+        
     }
 
     public Node FindClose(Node position, bool vertORorizon)
@@ -98,7 +105,7 @@ public class Graph
         {
             if (vertORorizon)
             {//x++
-                newNode.x+=0.01f;
+                newNode.x+=1f;
                 //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
                  temp = new Node(newNode);
                 if (FindNode(temp))
@@ -108,7 +115,7 @@ public class Graph
             }
             else
             {//y++
-                newNode.y += 0.01f;
+                newNode.y += 1f;
                 //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
                 temp = new Node(newNode);
                 if (FindNode(temp))
@@ -125,18 +132,15 @@ public class Graph
 
 
     //cancella tutti gli archi del nodo c
-    public void DeleteEdge(Node c)
+    public void DeleteEdge(Arc[] c)
     {
-        for (int i = 0; i < nodes.Count; i++)
+        
+        for (int i = 0; i < c.Length; i++)
         {
-            for(int j = 0; j < nodes[i].countArc; j++)
-            {
-                if (nodes[i].edges[j].a == c || nodes[i].edges[j].b == c)
-                {
-                    nodes[i].RemoveArc(nodes[i].edges[j]);
-                }
-            }
+            arcs.Remove(c[i]);
         }
+      
+        
     }
 
 

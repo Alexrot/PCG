@@ -15,6 +15,30 @@ public class Node
     }
 
 
+
+    public void AddEdgeToNode(ref Arc a)
+    {
+        edges.Add(a);
+        countArc++;
+    }
+
+    public void RemoveArc(Arc c)
+    {
+
+        edges.Remove(c);
+        countArc--;
+
+    }
+
+
+
+    public Arc[] connectedArc(Node c)
+    {
+        Arc[] n=edges.ToArray();
+        return n;
+    }
+
+    /*
     public void AddEdgeToNode(Node a, Node b)
     {
         Arc c = new Arc(2, a, b);
@@ -26,21 +50,11 @@ public class Node
         countArc++;
     }
 
-    public void RemoveArc(Arc c)
-    {
-
-                edges.Remove(c);
-                countArc--;
-
-    }
 
 
-    private bool FindEdge(Arc c)
-    {
-        return edges.Contains(c);
-    }
 
-    //si usa per gli archi sui bordi
+
+            //si usa per gli archi sui bordi
     public void AddEdgeToNodeLimit(Node a, Node b)
     {
         Arc c = new Arc(1, a, b);
@@ -51,6 +65,14 @@ public class Node
 
         countArc++;
     }
+    */
+
+    private bool FindEdge(Arc c)
+    {
+        return edges.Contains(c);
+    }
+
+
 
     public List<Arc> GetArcs()
     {
