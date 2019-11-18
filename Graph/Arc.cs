@@ -15,6 +15,11 @@ public class Arc
         this.b = b;
     }
 
+    public void ReduceValue()
+    {
+        value -= 1;
+    }
+
     public Node GetA() { return a; }
     public Node GetB() { return b; }
     public int GetValue() { return value; }

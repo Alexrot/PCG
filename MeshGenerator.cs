@@ -6,11 +6,13 @@ using UnityEngine;
 public class MeshGenerator : MonoBehaviour
 {
 
-    public GameObject poligon;
+    public Transform poligon;
 
     // Use this for initialization
     void Start()
     {
+        Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
+
         Mesh mesh = new Mesh();
 
         Vector3[] vertices = new Vector3[5];
@@ -25,8 +27,7 @@ public class MeshGenerator : MonoBehaviour
 
         mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
         //GetComponent<MeshFilter>().mesh = mesh;
-        poligon.GetComponent<MeshFilter>().mesh = mesh;
-        Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
+        newPoly.GetComponent<MeshFilter>().mesh = mesh;
         
     }
 

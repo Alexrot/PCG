@@ -32,9 +32,28 @@ public class Node
 
 
 
-    public Arc[] connectedArc(Node c)
+    public Arc[] ConnectedArc()
     {
         Arc[] n=edges.ToArray();
+        return n;
+    }
+
+    public Node[] NearNodes()
+    {
+        Node[] n= { };
+        Arc[] a = this.ConnectedArc();
+        for(int i=0;i<a.Length; i++)
+        {
+            if (a[i].a == this)
+            {
+                n[i] = a[i].b;
+            }
+            else
+            {
+                n[i] = a[i].a;
+            }
+        }
+        
         return n;
     }
 

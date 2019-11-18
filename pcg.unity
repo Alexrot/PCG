@@ -212,7 +212,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1002267936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343fa30cdbbf3664291c8764a4c11b1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poligon: {fileID: 4298046261911056609, guid: b263a1da47e027c40bcc5580d32ebf6f, type: 3}
+  poligon: {fileID: 7567965669559383704, guid: b263a1da47e027c40bcc5580d32ebf6f, type: 3}
 --- !u!4 &1002267937
 Transform:
   m_ObjectHideFlags: 0
@@ -304,7 +304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1609396807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5f507dc2349da249976de9b64ebb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  polygonNumber: 200
+  polygonNumber: 50
 --- !u!64 &1609396808
 MeshCollider:
   m_ObjectHideFlags: 0

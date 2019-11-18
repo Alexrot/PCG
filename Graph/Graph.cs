@@ -90,12 +90,17 @@ public class Graph
 
     public void Delete(Node c)
     {
-        DeleteEdge(c.connectedArc(c));
+        //DeleteEdge(c.ConnectedArc());
+        //passando il riferimento all'arco non c'è bisogno che io lo cancelli
         nodes.Remove(c);
         
         
     }
 
+
+
+
+    //creazione archi di bordo
     public Node FindClose(Node position, bool vertORorizon)
     {
         Vector2f newNode = position.position;
@@ -131,7 +136,7 @@ public class Graph
 
 
 
-    //cancella tutti gli archi del nodo c
+    //cancella tutti gli archi del array c
     public void DeleteEdge(Arc[] c)
     {
         
@@ -143,7 +148,10 @@ public class Graph
         
     }
 
-
+    public void UpdateEdge(Arc c)
+    {
+        c.ReduceValue();
+    }
 }
 
 

@@ -33,7 +33,7 @@ public class VoronoiToGraph : MonoBehaviour
             // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
             if (edge.ClippedEnds == null) continue;
 
-             poligoni = new Graph(99);
+             poligoni = new Graph(999);
             poligoni.AddEdge(poligoni.AddNode(edge.ClippedEnds[LR.LEFT]), poligoni.AddNode(edge.ClippedEnds[LR.RIGHT]));
             SearchGraph();
         }
