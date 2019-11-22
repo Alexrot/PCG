@@ -56,7 +56,7 @@ public class LoopFinder : MonoBehaviour
 
 
     List<Node> loopNode;
-    List<Arc> arcToLoop;
+    
 
 
 
@@ -126,7 +126,33 @@ public class LoopFinder : MonoBehaviour
         ///elimina archi e nodi morti (senza value, nodi o archi)
         ///passo 8
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-        TrovaDuplicato();
+        Node[] duplicato = null;
+        duplicato[0]=TrovaDuplicato();
+        loopNode.Add(duplicato[0]);
+        BackTrack(duplicato);
+    }
+
+
+    ///passo 2
+    ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
+    private void BackTrack(Node[] a)
+    {
+        Node[] newNodes = null;
+        foreach (Node k in a)
+        {
+             newNodes = k.NearNodes(k.ConnectedArc());
+        }
+        for(int i=0;i<newNodes.Length; i++)
+        {
+            //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
+            //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
+
+        }
+        
+        
+        //dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
+        //foreach ()
+
     }
 
 
