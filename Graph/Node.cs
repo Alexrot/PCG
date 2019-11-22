@@ -38,10 +38,9 @@ public class Node
         return n;
     }
 
-    public Node[] NearNodes()
+    public Node[] NearNodes(Arc[] a)
     {
         Node[] n= { };
-        Arc[] a = this.ConnectedArc();
         for(int i=0;i<a.Length; i++)
         {
             if (a[i].a == this)

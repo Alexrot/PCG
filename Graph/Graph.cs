@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class Graph
 {
-    List<Node> nodes;
-    List<Arc> arcs;
+    List<Node> nodes=null;
+    List<Arc> arcs=null;
 
 
     public Graph(int max)

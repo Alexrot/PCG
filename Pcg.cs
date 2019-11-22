@@ -10,7 +10,7 @@ public class Pcg : MonoBehaviour
 {
 
     
-    VoronoiToGraph vtg;
+    VoronoiToGraph vtg=null;
 
     private Dictionary<Vector2f, Site> puntiLloyd;
     private List<Edge> archiDelGrafo;
