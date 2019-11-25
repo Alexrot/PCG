@@ -28,20 +28,20 @@ public class LoopFinder : MonoBehaviour
     ///         ovvero
             ///passo 1*
             /// trova il duplicato
-            ///passo 2
+            ///passo 2*
             ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
-            ///passo 3
+            ///passo 3*
             ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
             ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-            ///passo 4 
+            ///passo 4 *
             ///controlla che sia un ciclo
-            ///passo 5 
+            ///passo 5 *
             ///diminuisci tutti gli archi del ciclo di 1
-            ///passo 6
+            ///passo 6*
             ///passa il ciclo alla funzione che genera il poligono
-            ///passo 7
-            ///elimina archi e nodi morti (senza value, nodi o archi)
-            ///passo 8
+            ///passo 7*
+            ///elimina archi e nodi morti (senza value, nodi o archi)/*/*/*/*/*/*/*/*/solo nodi/*/*/*/*/*/*/*/*
+            ///passo 8*
             ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
     /// </summary>
 
@@ -271,7 +271,12 @@ private void ControlloVuoto(Arc[] c)
         ///passo 3*
         ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
         ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-        BackTrack(prossimiDaControllare.ToArray());
+        if (prossimiDaControllare.Count != 1)
+        {
+            //e uno solo se siamo arrivati al nodo sorgente da cui siamo partiti
+            BackTrack(prossimiDaControllare.ToArray());
+        }
+        
 
         //dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
         //foreach ()
