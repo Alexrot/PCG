@@ -26,7 +26,7 @@ public class LoopFinder : MonoBehaviour
     ///         ripeti dal passo 1
     ///         se non ci sono piu nodi finisci
     ///         ovvero
-            ///passo 1
+            ///passo 1*
             /// trova il duplicato
             ///passo 2
             ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
@@ -49,10 +49,10 @@ public class LoopFinder : MonoBehaviour
 
 
     List<Arc> percorsoUsato= new List<Arc>();
-    List<Node> livello=null;
+    List<Node> livello;
     Boolean loop = false;
     Boolean complete = false;
-    List<List<Node>> matrice=null;
+    List<List<Node>> matrice;
 
 
     List<Node> loopNode;
@@ -64,6 +64,9 @@ public class LoopFinder : MonoBehaviour
     
     void FindLoop(Node start)
     {
+        loopNode = new List<Node>();
+        livello = new List<Node>();
+        matrice =new List<List<Node>>();
         Node[] layerNode = { };
 
         /// passo 1
@@ -109,66 +112,33 @@ public class LoopFinder : MonoBehaviour
     /// hai il ciclo ora fai "retromarcia" fino a trovare 2 volte lo stesso nodo
     private void LoopFound()
     {
-        ///passo 1
+        ///passo 1*
         ///trova il duplicato
-        ///passo 2
+        ///passo 2*
         ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
-        ///passo 3
+        ///passo 3*
         ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
         ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-        ///passo 4 
+        ///passo 4 *
         ///controlla che sia un ciclo
-        ///passo 5 
+        ///passo 5 *
         ///diminuisci tutti gli archi del ciclo di 1
-        ///passo 6
+        ///passo 6*
         ///passa il ciclo alla funzione che genera il poligono
-        ///passo 7
+        ///passo 7*
         ///elimina archi e nodi morti (senza value, nodi o archi)
-        ///passo 8
+        ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-        Node[] duplicato = null;
+        Node[] duplicato = { };
         duplicato[0]=TrovaDuplicato();
         loopNode.Add(duplicato[0]);
         BackTrack(duplicato);
     }
 
 
-    ///passo 2
-    ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
-    private void BackTrack(Node[] a)
-    {
-        Node[] newNodes = null;
-        foreach (Node k in a)
-        {
-             newNodes = k.NearNodes(k.ConnectedArc());
-        }
-        for(int i=0;i<newNodes.Length; i++)
-        {
-            //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
-            //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
-
-        }
-        
-        
-        //dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
-        //foreach ()
-
-    }
 
 
-    ///passo 1
-    ///trova il duplicato
-    private Node TrovaDuplicato()
-    {
-        //controlla le ultime 2 righe per trovare duplicati
-        List<Node> ultimeDue = null;
-        matrixLayer = matrice.Count();
-        ultimeDue.AddRange(matrice[matrixLayer]);
-        ultimeDue.AddRange(matrice[matrixLayer-1]);
-        Node duplicates = (Node)ultimeDue.GroupBy(s => s).SelectMany(grp => grp.Skip(1));
-        Console.WriteLine(duplicates);
-        return duplicates;
-    }
+
 
 
     /// passo 3
@@ -239,7 +209,7 @@ private void ControlloVuoto(Arc[] c)
         int i = 0;
         foreach(Arc trovato in a)
         {
-            if (!percorsoUsato.Contains(trovato))
+            if (!percorsoUsato.Contains(trovato)&&trovato.GetValue()>0)
             {
                 retArc[i] = trovato;
                 i++;
@@ -248,10 +218,65 @@ private void ControlloVuoto(Arc[] c)
         return retArc;
     }
 
+    ///--------------///////////////----------------/////POLIGONO TROVATO/////--------------///////////////----------------///
 
 
+    ///passo 1*
+    ///trova il duplicato
+    private Node TrovaDuplicato()
+    {
+        //controlla le ultime 2 righe per trovare duplicati
+        List<Node> ultimeDue = null;
+        matrixLayer = matrice.Count();
+        ultimeDue.AddRange(matrice[matrixLayer]);
+        ultimeDue.AddRange(matrice[matrixLayer - 1]);
+        Node duplicates = (Node)ultimeDue.GroupBy(s => s).SelectMany(grp => grp.Skip(1));
+
+        return duplicates;
+    }
 
 
+    ///passo 2*
+    ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
+    private void BackTrack(Node[] a)
+    {
+        List<Node> prossimiDaControllare = new List<Node>();
+        List<Node> nodiVicini =new List<Node>();
+        foreach(Node k in a)
+        {
+            nodiVicini = k.NearNodes(k.ConnectedArc()).ToList();
+        }
+
+            //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
+            //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
+            if (nodiVicini.Contains(loopNode[0]))
+            {
+            prossimiDaControllare.Add(loopNode[0]);
+            }
+        foreach(Node nodiLivello in matrice[matrixLayer - 1])
+        {
+            if (nodiVicini.Contains(nodiLivello))
+            {
+                if (!loopNode.Contains(nodiLivello))
+                {
+                    loopNode.Add(nodiLivello);
+                    prossimiDaControllare.Add(nodiLivello);
+                }
+
+            }
+        }
+            
+        //ATTENZIONE POTREBBE PORTARE PROBLEMI
+        matrixLayer--;
+        ///passo 3*
+        ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
+        ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
+        BackTrack(prossimiDaControllare.ToArray());
+
+        //dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
+        //foreach ()
+
+    }
 
 
 
