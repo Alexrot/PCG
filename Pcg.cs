@@ -5,27 +5,90 @@ using UnityEngine;
 using csDelaunay;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class Pcg : MonoBehaviour
 {
 
-    
-    VoronoiToGraph vtg=null;
+    public Text tBase;
+    VoronoiToGraph vtg;
+    public int polygonNumber = 10;
 
-    private Dictionary<Vector2f, Site> puntiLloyd;
+    private Dictionary<Vector2, Site> puntiLloyd;
     private List<Edge> archiDelGrafo;
 
     private void Start()
     {
+        vtg = new VoronoiToGraph();
         //genera un immagine su cui lloyd e voronoi lavoreranno
         Rectf bounds = new Rectf(0, 0, 512, 512);
         //punti randomici NON QUELLI DA UTILIZZARE
-        List<Vector2f> points = CreateRandomPoint(100);
+        List<Vector2> points = CreateRandomPoint(polygonNumber);
         //genero voronoi e modifico tramite lloyd
         Voronoi voronoi = new Voronoi(points, bounds, 4);
         puntiLloyd = voronoi.SitesIndexedByLocation;
         archiDelGrafo = voronoi.Edges;
         vtg.GeneraGrafo(archiDelGrafo, 512f);
+        DisplayVoronoiDiagram(points, archiDelGrafo);
+        //tBase.text = archiDelGrafo.ToString()+ "";
+        
+    }
+
+
+
+    //test
+
+    private void DisplayVoronoiDiagram(List<Vector2> points, List<Edge> archiDelGrafo)
+    {
+        Texture2D tx = new Texture2D(512, 512);
+        foreach (Vector2 kv in points)
+        {
+            tx.SetPixel((int)kv.x, (int)kv.y, Color.black);
+        }
+        foreach (Edge edge in archiDelGrafo)
+        {
+            // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
+            if (edge.ClippedEnds == null) continue;
+
+            DrawLine(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT], tx, Color.black);
+        }
+        tx.Apply();
+
+        this.GetComponent<Renderer>().material.mainTexture = tx;
+    }
+    private void DrawLine(Vector2 p0, Vector2 p1, Texture2D tx, Color c, int offset = 0)
+    {
+        int x0 = (int)p0.x;
+        int y0 = (int)p0.y;
+        int x1 = (int)p1.x;
+        int y1 = (int)p1.y;
+
+        int dx = Mathf.Abs(x1 - x0);
+        int dy = Mathf.Abs(y1 - y0);
+        int sx = x0 < x1 ? 1 : -1;
+        int sy = y0 < y1 ? 1 : -1;
+        int err = dx - dy;
+
+        Debug.Log("linea da: x" + x0 + " y " + y0);
+        Debug.Log("a: x" + x1 + " y " + y1);
+
+        while (true)
+        {
+            tx.SetPixel(x0 + offset, y0 + offset, c);
+            //controlla se il disegno e arrivato alla fine
+            if (x0 == x1 && y0 == y1) break;
+            int e2 = 2 * err;
+            if (e2 > -dy)
+            {
+                err -= dy;
+                x0 += sx;
+            }
+            if (e2 < dx)
+            {
+                err += dx;
+                y0 += sy;
+            }
+        }
     }
 
 
@@ -36,16 +99,14 @@ public class Pcg : MonoBehaviour
 
 
 
-
-
     //PUNTI PRE-LLOYD
-    private List<Vector2f> CreateRandomPoint(int polygonNumber)
+    private List<Vector2> CreateRandomPoint(int polygonNumber)
     {
       
-        List<Vector2f> points = new List<Vector2f>();
+        List<Vector2> points = new List<Vector2>();
         for (int i = 0; i < polygonNumber; i++)
         {
-            points.Add(new Vector2f(Random.Range(0, 512), Random.Range(0, 512)));
+            points.Add(new Vector2(Random.Range(0, 512), Random.Range(0, 512)));
             
         }
 
@@ -87,7 +148,7 @@ public class Pcg : MonoBehaviour
     /**
      * PASSO 4
      * prendi i punti generati da lloyd tramite il codice
-     * foreach (KeyValuePair<Vector2f, Site> kv in sites)
+     * foreach (KeyValuePair<Vector2, Site> kv in sites)
            {
                tx.SetPixel((int)kv.Key.x, (int)kv.Key.y, Color.red);
            }

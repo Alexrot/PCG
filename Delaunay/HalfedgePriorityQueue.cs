@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace csDelaunay {
 
@@ -101,10 +102,10 @@ namespace csDelaunay {
 		/*
 		 * @return coordinates of the Halfedge's vertex in V*, the transformed Voronoi diagram
 		 */
-		public Vector2f Min() {
+		public Vector2 Min() {
 			AdjustMinBucket();
 			Halfedge answer = hash[minBucked].nextInPriorityQueue;
-			return new Vector2f(answer.vertex.x, answer.ystar);
+			return new Vector2(answer.vertex.x, answer.ystar);
 		}
 
 		/*

@@ -9,8 +9,8 @@ public class test : MonoBehaviour
     public List<Arco> ar;
     public Text tRef;
     public Text tBase;
-    int number=0;
-    int ra = 0;
+    //int number=0;
+    //int ra = 0;
     // Start is called before the first frame update
     void Start()
     {

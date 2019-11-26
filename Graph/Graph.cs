@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Graph
 {
-    List<Node> nodes=null;
-    List<Arc> arcs=null;
+    public List<Node> nodes;
+    List<Arc> arcs;
 
 
-    public Graph(int max)
+    public Graph()
         {
-            nodes = new List<Node>();
+        nodes = new List<Node>();
+        arcs = new List<Arc>();
         }
 
 
 
 
-        public Node AddNode(Vector2f n)
+        public Node AddNode(Vector2 n)
         {
             
             Node c = new Node(n);
-            if (!FindNode(c))
+            if (!nodes.Contains(c))
             {
             nodes.Add(c);
             }
@@ -29,20 +31,20 @@ public class Graph
 
 
 
-
+    /*
 
         private bool FindNode(Node c)
         {
             return nodes.Contains(c);
         }
 
-
+    */
 
 
 
         public void AddEdge(Node a, Node b)
         {
-            if(FindNode(a) || FindNode(b))
+            if(nodes.Contains(a) || nodes.Contains(b))
             {
             //aggiungo l'arco ad entrabi i nodi senza fregarmene dell'ardine perche non e ordinato il grafo
             Arc temp = new Arc(2, a, b);
@@ -65,7 +67,7 @@ public class Graph
     //si usa per gli archi sui bordi
     public void AddEdgeLimit(Node a, Node b)
     {
-        if (FindNode(a) || FindNode(b))
+        if (nodes.Contains(a) || nodes.Contains(b))
         {
             Arc temp = new Arc(1, a, b);
             arcs.Add(temp);
@@ -103,17 +105,18 @@ public class Graph
     //creazione archi di bordo
     public Node FindClose(Node position, bool vertORorizon)
     {
-        Vector2f newNode = position.position;
+        Vector2 newNode = position.position;
         bool searchForNode = true;
         Node temp;
         while (searchForNode)
         {
+            Debug.Log("FindClose()");
             if (vertORorizon)
             {//x++
                 newNode.x+=1f;
                 //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
                  temp = new Node(newNode);
-                if (FindNode(temp))
+                if (nodes.Contains(temp))
                 {
                     return temp;
                 }
@@ -123,7 +126,7 @@ public class Graph
                 newNode.y += 1f;
                 //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
                 temp = new Node(newNode);
-                if (FindNode(temp))
+                if (nodes.Contains(temp))
                 {
                     return temp;
                 }

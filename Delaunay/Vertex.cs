@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace csDelaunay {
 
@@ -26,8 +27,8 @@ namespace csDelaunay {
 		#endregion
 
 		#region Object
-		private Vector2f coord;
-		public Vector2f Coord {get{return coord;}set{coord=value;}}
+		private Vector2 coord;
+		public Vector2 Coord {get{return coord;}set{coord=value;}}
 
 		public float x {get{return coord.x;}}
 		public float y {get{return coord.y;}}
@@ -40,13 +41,13 @@ namespace csDelaunay {
 		}
 
 		private Vertex Init(float x, float y) {
-			coord = new Vector2f(x,y);
+			coord = new Vector2(x,y);
 
 			return this;
 		}
 
 		public void Dispose() {
-			coord = Vector2f.zero;
+			coord = Vector2.zero;
 			pool.Enqueue(this);
 		}
 

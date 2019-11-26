@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Node 
 {
-    public Vector2f position;
+    public Vector2 position;
     public List<Arc> edges;
     public int countArc;
-    public Node(Vector2f position)
+    public Node(Vector2 position)
     {
         this.position = position;
         edges = new List<Arc>();

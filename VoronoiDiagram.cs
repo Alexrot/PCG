@@ -10,13 +10,13 @@ public class VoronoiDiagram : MonoBehaviour
     public int polygonNumber = 10;
 
     // This is where we will store the resulting data
-    private Dictionary<Vector2f, Site> sites;
+    private Dictionary<Vector2, Site> sites;
     private List<Edge> edges;
 
     void Start()
     {
         // Create your sites (lets call that the center of your polygons)
-        List<Vector2f> points = CreateRandomPoint();
+        List<Vector2> points = CreateRandomPoint();
 
         // Create the bounds of the voronoi diagram
         // Use Rectf instead of Rect; it's a struct just like Rect and does pretty much the same,
@@ -34,18 +34,19 @@ public class VoronoiDiagram : MonoBehaviour
         // Now retreive the edges from it, and the new sites position if you used lloyd relaxtion
         sites = voronoi.SitesIndexedByLocation;
         edges = voronoi.Edges;
-
+        VoronoiToGraph vtg = new VoronoiToGraph();
+        vtg.GeneraGrafo(edges, 512f);
         DisplayVoronoiDiagram();
     }
 
-    private List<Vector2f> CreateRandomPoint()
+    private List<Vector2> CreateRandomPoint()
     {
-        // Use Vector2f, instead of Vector2
-        // Vector2f is pretty much the same than Vector2, but like you could run Voronoi in another thread
-        List<Vector2f> points = new List<Vector2f>();
+        // Use Vector2, instead of Vector2
+        // Vector2 is pretty much the same than Vector2, but like you could run Voronoi in another thread
+        List<Vector2> points = new List<Vector2>();
         for (int i = 0; i < polygonNumber; i++)
         {
-            points.Add(new Vector2f(Random.Range(0, 512), Random.Range(0, 512)));
+            points.Add(new Vector2(Random.Range(0, 512), Random.Range(0, 512)));
         }
 
         return points;
@@ -56,7 +57,7 @@ public class VoronoiDiagram : MonoBehaviour
     private void DisplayVoronoiDiagram()
     {
         Texture2D tx = new Texture2D(512, 512);
-        foreach (KeyValuePair<Vector2f, Site> kv in sites)
+        foreach (KeyValuePair<Vector2, Site> kv in sites)
         {
             tx.SetPixel((int)kv.Key.x, (int)kv.Key.y, Color.red);
         }
@@ -65,7 +66,7 @@ public class VoronoiDiagram : MonoBehaviour
             // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
             if (edge.ClippedEnds == null) continue;
 
-            DrawLine(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT], tx, Color.black);
+            DrawLine(edge.ClippedEnds[LR.LEFT], edge.ClippedEnds[LR.RIGHT], tx, Color.white);
         }
         tx.Apply();
 
@@ -73,7 +74,7 @@ public class VoronoiDiagram : MonoBehaviour
     }
 
     // Bresenham line algorithm
-    private void DrawLine(Vector2f p0, Vector2f p1, Texture2D tx, Color c, int offset = 0)
+    private void DrawLine(Vector2 p0, Vector2 p1, Texture2D tx, Color c, int offset = 0)
     {
         int x0 = (int)p0.x;
         int y0 = (int)p0.y;
