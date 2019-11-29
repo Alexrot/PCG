@@ -21,7 +21,7 @@ public class VoronoiDiagram : MonoBehaviour
         // Create the bounds of the voronoi diagram
         // Use Rectf instead of Rect; it's a struct just like Rect and does pretty much the same,
         // but like that it allows you to run the delaunay library outside of unity (which mean also in another tread)
-        Rectf bounds = new Rectf(0, 0, 512, 512);
+        Rect bounds = new Rect(0, 0, 512, 512);
 
         // There is a two ways you can create the voronoi diagram: with or without the lloyd relaxation
         // Here I used it with 2 iterations of the lloyd relaxation

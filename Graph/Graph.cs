@@ -5,7 +5,7 @@ using UnityEngine;
 public class Graph
 {
     public List<Node> nodes;
-    List<Arc> arcs;
+    public List<Arc> arcs;
 
 
     public Graph()
@@ -29,16 +29,6 @@ public class Graph
         return c;
         }
 
-
-
-    /*
-
-        private bool FindNode(Node c)
-        {
-            return nodes.Contains(c);
-        }
-
-    */
 
 
 
@@ -94,46 +84,12 @@ public class Graph
     {
         //DeleteEdge(c.ConnectedArc());
         //passando il riferimento all'arco non c'è bisogno che io lo cancelli
+        //HAHAHAHHAHAHAHAH NO T.T
         nodes.Remove(c);
         
         
     }
 
-
-
-
-    //creazione archi di bordo
-    public Node FindClose(Node position, bool vertORorizon)
-    {
-        Vector2 newNode = position.position;
-        bool searchForNode = true;
-        Node temp;
-        while (searchForNode)
-        {
-            Debug.Log("FindClose()");
-            if (vertORorizon)
-            {//x++
-                newNode.x+=1f;
-                //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
-                 temp = new Node(newNode);
-                if (nodes.Contains(temp))
-                {
-                    return temp;
-                }
-            }
-            else
-            {//y++
-                newNode.y += 1f;
-                //genero un nodo temporaneo per controllare l'esistenza di un nodo in quella posizione
-                temp = new Node(newNode);
-                if (nodes.Contains(temp))
-                {
-                    return temp;
-                }
-            }
-        }
-        return null;
-    }
 
 
 

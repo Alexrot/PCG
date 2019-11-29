@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class Pcg : MonoBehaviour
 {
-
+    
     public Text tBase;
     VoronoiToGraph vtg;
     public int polygonNumber = 10;
@@ -21,7 +21,7 @@ public class Pcg : MonoBehaviour
     {
         vtg = new VoronoiToGraph();
         //genera un immagine su cui lloyd e voronoi lavoreranno
-        Rectf bounds = new Rectf(0, 0, 512, 512);
+        Rect bounds = new Rect(0, 0, 512, 512);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(polygonNumber);
         //genero voronoi e modifico tramite lloyd
@@ -29,6 +29,7 @@ public class Pcg : MonoBehaviour
         puntiLloyd = voronoi.SitesIndexedByLocation;
         archiDelGrafo = voronoi.Edges;
         vtg.GeneraGrafo(archiDelGrafo, 512f);
+        Graph grafoFinale = vtg.GetGraph();
         DisplayVoronoiDiagram(points, archiDelGrafo);
         //tBase.text = archiDelGrafo.ToString()+ "";
         
@@ -90,15 +91,6 @@ public class Pcg : MonoBehaviour
             }
         }
     }
-
-
-
-
-
-
-
-
-
     //PUNTI PRE-LLOYD
     private List<Vector2> CreateRandomPoint(int polygonNumber)
     {

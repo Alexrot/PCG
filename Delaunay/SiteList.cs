@@ -42,14 +42,14 @@ namespace csDelaunay {
 			}
 		}
 
-		public Rectf GetSitesBounds() {
+		public Rect GetSitesBounds() {
 			if (!sorted) {
 				SortList();
 				ResetListIndex();
 			}
 			float xmin, xmax, ymin, ymax;
 			if (sites.Count == 0) {
-				return Rectf.zero;
+				return Rect.zero;
 			}
 			xmin = float.MaxValue;
 			xmax = float.MinValue;
@@ -61,7 +61,7 @@ namespace csDelaunay {
 			ymin = sites[0].y;
 			ymax = sites[sites.Count-1].y;
 
-			return new Rectf(xmin, ymin, xmax - xmin, ymax - ymin);
+			return new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
 		}
 
 		public List<Vector2> SiteCoords() {
@@ -90,7 +90,7 @@ namespace csDelaunay {
 			return circles;
 		}
 
-		public List<List<Vector2>> Regions(Rectf plotBounds) {
+		public List<List<Vector2>> Regions(Rect plotBounds) {
 			List<List<Vector2>> regions = new List<List<Vector2>>();
 			foreach (Site site in sites) {
 				regions.Add(site.Region(plotBounds));

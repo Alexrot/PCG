@@ -1,4 +1,5 @@
 ﻿using csDelaunay;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,10 @@ public class VoronoiToGraph : MonoBehaviour
         poligoni = new Graph();
     }
 
-
+    public Graph GetGraph()
+    {
+        return poligoni;
+    }
 
 
     //genera il grafo dei nodi interni
@@ -41,7 +45,7 @@ public class VoronoiToGraph : MonoBehaviour
             poligoni.AddEdge(poligoni.AddNode(edge.ClippedEnds[LR.LEFT]), poligoni.AddNode(edge.ClippedEnds[LR.RIGHT]));
             Debug.Log("22222222222222222222222");
         }
-        //SearchGraph();
+        SearchGraph();
     }
 
     public Graph Get() { return poligoni; }
@@ -52,14 +56,12 @@ public class VoronoiToGraph : MonoBehaviour
     public void SearchGraph()
     {
         Node altoSx = poligoni.AddNode(new Vector2(0f, 0f));
-        Node altoDx = poligoni.AddNode(new Vector2(0f, maxCanvas));
-        Node bassoSx = poligoni.AddNode(new Vector2(maxCanvas, 0f));
+        Node altoDx = poligoni.AddNode(new Vector2(maxCanvas, 0f));
+        Node bassoSx = poligoni.AddNode(new Vector2(0f, maxCanvas));
         Node bassoDx = poligoni.AddNode(new Vector2(maxCanvas, maxCanvas));
         Debug.Log("punti generati");
         //parte 2 genera i punti etremi del contenitore (0,0)(x,0)(0,x)(x,x)
-        bool notOver1 =true;
-        bool notOver2 = true;
-        Node temp;
+        
         Node temp1=altoSx;
         Node temp2=bassoSx;
 
@@ -68,6 +70,12 @@ public class VoronoiToGraph : MonoBehaviour
         List<Node> y0 = new List<Node>();
         List<Node> yMax = new List<Node>();
 
+
+        //parte 3 collega i nodi piu vicini sui bordi del contenitore
+        //true cerca in orizzontale
+
+        //dividi i nodi in 4 liste che sono i 4 bordi del nostro grafo salvando in ogni lista
+        //i nodi che hanno 0 o max in una delle 2 coordinate                                                                                        
         foreach (Node a in poligoni.nodes)
         {
             if (a.position.x == 0)
@@ -86,85 +94,129 @@ public class VoronoiToGraph : MonoBehaviour
             {
                 yMax.Add(a);
             }
-
+            Debug.Log("vtg LISTE BORDI");
         }
-        /*
-         * 
-         * WIP
-         * 
-         * */
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        Debug.Log("vtg START CONNECTION");
+        SortBordi(x0, altoSx, "ovest");
+        SortBordi(xMax, altoDx, "est");
+        SortBordi(y0, altoSx,"nord");
+        SortBordi(yMax, bassoSx, "sud");
+        Debug.Log("vtg END CONNECTION");
 
+    }
 
-
-        //parte 3 collega i nodi piu vicini sui bordi del contenitore
-        //true cerca in orizzontale
-
-        while (notOver1&& notOver2)
-            {
-            Debug.Log("SearchGraph() while strano orizzontale");
-            if (temp1.position != altoDx.position)
-                {//da in alto a sx fino a in alto a dx
-
-                    poligoni.AddEdgeLimit(temp1, temp = poligoni.FindClose(temp1, true));
-                    temp1 = temp;
-                }
-                else
+    private void SortBordi(List<Node> a, Node startNode, String bordo)
+    {
+        //controlla su quale borso siamo
+        Node startingPoint = startNode;
+        switch(bordo)
+        {
+            case "nord":
+                Debug.Log("vtg BORDO NORD");
+                a.Remove(startNode);
+                while (a.Count != 0)
                 {
-                    notOver1 = false;
-                }
-                if (temp2.position != bassoDx.position)
-                {//da in basso a sx fino a in basso a dx
+                    Node next = a[0];
+                    for (int i = 1; i < a.Count - 1; i++)
+                    {
+                        if (a[i].position.x < next.position.x)
+                        {
+                            next = a[i];
+                        }
+                    }
 
-                    poligoni.AddEdgeLimit(temp2, temp = poligoni.FindClose(temp2, true));
-                    temp2 = temp;
+                    poligoni.AddEdgeLimit(startingPoint, next);
+                    startingPoint = next;
+                    a.Remove(next);
+                    if (a.Count == 1)
+                    {
+                        poligoni.AddEdgeLimit(startingPoint, a[0]);
+                        a.Remove(a[0]);
+                    }
                 }
-                else
+                break;
+
+            case "sud":
+                Debug.Log("vtg BORDO SUD");
+                a.Remove(startNode);
+                while (a.Count != 0)
                 {
-                    notOver2 = false;
-                }
-            }
+                    Node next = a[0];
+                    for (int i = 1; i < a.Count - 1; i++)
+                    {
+                        if (a[i].position.x < next.position.x)
+                        {
+                            next = a[i];
+                        }
+                    }
 
+                    poligoni.AddEdgeLimit(startingPoint, next);
+                    startingPoint = next;
+                    a.Remove(next);
+                    if (a.Count == 1)
+                    {
+                        poligoni.AddEdgeLimit(startingPoint, a[0]);
+                        a.Remove(a[0]);
+                    }
+                }
+                break;
+
+            case "ovest":
+                Debug.Log("vtg BORDO OVEST");
+                a.Remove(startNode);
+                while (a.Count != 0)
+                {
+                    Debug.Log("vtg BORDO OVEST" + a.Count);
+                    Node next = a[0];
+                    for (int i = 1; i < a.Count - 1; i++)
+                    {
+                        if (a[i].position.y < next.position.y)
+                        {
+                            next = a[i];
+                        }
+                    }
+                    Debug.Log("vtg BORDO OVEST" + a.Count);
+                    poligoni.AddEdgeLimit(startingPoint, next);
+                    startingPoint = next;
+                    a.Remove(next);
+                    if (a.Count == 1)
+                    {
+                        Debug.Log("vtg BORDO OVEST if entri?" + a.Count);
+                        poligoni.AddEdgeLimit(startingPoint, a[0]);
+                        a.Remove(a[0]);
+                    }
+                }
+                Debug.Log("vtg BORDO OVEST sei uscito?" + a.Count);
+                break;
+
+            case "est":
+                Debug.Log("vtg BORDO EST");
+                a.Remove(startNode);
+                while (a.Count != 0)
+                {
+                    Node next = a[0];
+                    for (int i = 1; i < a.Count - 1; i++)
+                    {
+                        if (a[i].position.y < next.position.y)
+                        {
+                            next = a[i];
+                        }
+                    }
+
+                    poligoni.AddEdgeLimit(startingPoint, next);
+                    startingPoint = next;
+                    a.Remove(next);
+                    if (a.Count == 1)
+                    {
+                        poligoni.AddEdgeLimit(startingPoint, a[0]);
+                        a.Remove(a[0]);
+                    }
+                }
+                break;
+        }
 
         
-        //else cerca in verticale 
-        
-             notOver1 = true;
-             notOver2 = true;
-
-             temp1 = altoSx;
-             temp2 = altoDx;
-
-            while (notOver1 && notOver2)
-            {
-            Debug.Log("SearchGraph() while strano verticale");
-            if (temp1.position == bassoSx.position)
-                {//da in alto a sx fino a in basso a sx 
-                    poligoni.AddEdgeLimit(temp1, temp = poligoni.FindClose(temp1, false));
-                    temp1 = temp;
-                }
-                else
-                {
-                    notOver1 = false;
-                }
-                if (temp2.position == bassoDx.position)
-                {//da in alto a dx fino a in basso a dx
-                    poligoni.AddEdgeLimit(temp2, temp = poligoni.FindClose(temp1, false));
-                    temp2 = temp;
-                }
-                else
-                {
-                    notOver2 = false;
-                }
-            }
-
     }
     /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
 }

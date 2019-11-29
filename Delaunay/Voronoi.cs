@@ -16,8 +16,8 @@ namespace csDelaunay {
 
 		// TODO generalize this so it doesn't have to be a rectangle;
 		// then we can make the fractal voronois-within-voronois
-		private Rectf plotBounds;
-		public Rectf PlotBounds {get{return plotBounds;}}
+		private Rect plotBounds;
+		public Rect PlotBounds {get{return plotBounds;}}
 		
 		private Dictionary<Vector2,Site> sitesIndexedByLocation;
 		public Dictionary<Vector2,Site> SitesIndexedByLocation {get{return sitesIndexedByLocation;}}
@@ -38,23 +38,23 @@ namespace csDelaunay {
 			}
 			edges.Clear();
 
-			plotBounds = Rectf.zero;
+			plotBounds = Rect.zero;
 			sitesIndexedByLocation.Clear();
 			sitesIndexedByLocation = null;
 		}
 
-		public Voronoi(List<Vector2> points, Rectf plotBounds) {
+		public Voronoi(List<Vector2> points, Rect plotBounds) {
 			weigthDistributor = new System.Random();
 			Init(points,plotBounds);
 		}
 
-		public Voronoi(List<Vector2> points, Rectf plotBounds, int lloydIterations) {
+		public Voronoi(List<Vector2> points, Rect plotBounds, int lloydIterations) {
 			weigthDistributor = new System.Random();
 			Init(points,plotBounds);
 			LloydRelaxation(lloydIterations);
 		}
 
-		private void Init(List<Vector2> points, Rectf plotBounds) {
+		private void Init(List<Vector2> points, Rect plotBounds) {
 			sites = new SiteList();
 			sitesIndexedByLocation = new Dictionary<Vector2, Site>();
 			AddSites(points);
@@ -162,7 +162,7 @@ namespace csDelaunay {
 			Halfedge lbnd, rbnd, llbnd, rrbnd, bisector;
 			Edge edge;
 
-			Rectf dataBounds = sites.GetSitesBounds();
+			Rect dataBounds = sites.GetSitesBounds();
 
 			int sqrtSitesNb = (int)Math.Sqrt(sites.Count() + 4);
 			HalfedgePriorityQueue heap = new HalfedgePriorityQueue(dataBounds.y, dataBounds.height, sqrtSitesNb);
@@ -352,7 +352,7 @@ namespace csDelaunay {
 
 				// Between each replacement of the cendroid of the cell,
 				// we need to recompute Voronoi diagram:
-				Rectf origPlotBounds = this.plotBounds;
+				Rect origPlotBounds = this.plotBounds;
 				Dispose();
 				Init(newPoints,origPlotBounds);
 			}

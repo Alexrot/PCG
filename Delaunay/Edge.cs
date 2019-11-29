@@ -189,11 +189,11 @@ namespace csDelaunay {
 		 * within the bounds. If no part of the Edge falls within the bounds, leave clippedVertices null
 		 * @param bounds
 		 */ 
-		public void ClipVertices(Rectf bounds) {
+		public void ClipVertices(Rect bounds) {
 			float xmin = bounds.x;
 			float ymin = bounds.y;
-			float xmax = bounds.right;
-			float ymax = bounds.bottom;
+			float xmax = bounds.xMax;
+			float ymax = bounds.yMax;
 
 			Vertex vertex0, vertex1;
 			float x0, x1, y0, y1;
