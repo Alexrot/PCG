@@ -56,6 +56,8 @@ public class LoopFinder : MonoBehaviour
 
 
     List<Node> loopNode;
+    List<Arc> loopArc;
+    
     
 
 
@@ -64,6 +66,7 @@ public class LoopFinder : MonoBehaviour
     
     void FindLoop(Node start)
     {
+        loopArc = new List<Arc>();
         loopNode = new List<Node>();
         livello = new List<Node>();
         matrice =new List<List<Node>>();
@@ -125,7 +128,7 @@ public class LoopFinder : MonoBehaviour
         ///diminuisci tutti gli archi del ciclo di 1
         ///passo 6*
         ///passa il ciclo alla funzione che genera il poligono
-        ///passo 7*
+        ///passo 7*//////////////////////aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
         ///elimina archi e nodi morti (senza value, nodi o archi)
         ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
@@ -133,7 +136,23 @@ public class LoopFinder : MonoBehaviour
         duplicato[0]=TrovaDuplicato();
         loopNode.Add(duplicato[0]);
         BackTrack(duplicato);
+        ///passo 4 *
+        ///controlla che sia un ciclo
+        ///passo 5 *
+        ///diminuisci tutti gli archi del ciclo di 1
+        LoopCheck();
+        foreach(Arc a in loopArc)
+        {
+            a.ReduceValue();
+        }
+        ///passo 6*
+        ///passa il ciclo alla funzione che genera il poligono
+
+
+
     }
+
+
 
 
 
@@ -146,7 +165,7 @@ public class LoopFinder : MonoBehaviour
     private void IsLoop(List<List<Node>> matrice)
     {
         //controllo l'ultimo e il penultimo, poiche non è possibile che si generano cicli tra livelli più distanti
-        List<Node> lastTwo=null;
+        List<Node> lastTwo=new List<Node>();
         lastTwo.AddRange(matrice[matrice.Count()]);
         lastTwo.AddRange(matrice[matrice.Count()-1]);
         if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
@@ -230,6 +249,8 @@ private void ControlloVuoto(Arc[] c)
         matrixLayer = matrice.Count();
         ultimeDue.AddRange(matrice[matrixLayer]);
         ultimeDue.AddRange(matrice[matrixLayer - 1]);
+
+        Debug.Log("errore linq LoopFinder:TrovaDuplicato");
         Node duplicates = (Node)ultimeDue.GroupBy(s => s).SelectMany(grp => grp.Skip(1));
 
         return duplicates;
@@ -253,12 +274,15 @@ private void ControlloVuoto(Arc[] c)
             {
             prossimiDaControllare.Add(loopNode[0]);
             }
+            //controlla per errore di indici
+            //debug.log
         foreach(Node nodiLivello in matrice[matrixLayer - 1])
         {
             if (nodiVicini.Contains(nodiLivello))
             {
                 if (!loopNode.Contains(nodiLivello))
                 {
+
                     loopNode.Add(nodiLivello);
                     prossimiDaControllare.Add(nodiLivello);
                 }
@@ -283,37 +307,36 @@ private void ControlloVuoto(Arc[] c)
 
     }
 
-
-
-
-
-    /*
-        bool Loop()
-        {
-            for(int i=0; i<arcToLoop.Count; i++)
-            while (true)
-            {
-                if (a.GetArcs&&)
-                break;
-            }
-            return true;
-        }
-
-
-
-
-
-        */
-
-
-    class Poligon
+    ///passo 4 *
+    ///controlla che sia un ciclo
+    ///passo 5 *
+    ///diminuisci tutti gli archi del ciclo di 1
+    private void LoopCheck()
     {
-        Node[] punti;
-        public void GeneratePoligon(Node[] punti)
+        List<Node> vicini = new List<Node>();
+        
+        foreach(Node a in loopNode)
         {
-            this.punti = punti;
+            vicini.AddRange(a.NearNodes(a.ConnectedArc()).ToList());
+            vicini.AddRange(loopNode);
+            Node[] u = vicini
+                    .GroupBy(i => i)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key).ToArray();
+            foreach(Node b in u)
+            {
+                if(!loopArc.Contains(a.FindArc(a, b)))
+                {
+                    loopArc.Add(a.FindArc(a, b));
+                }                
+            }
+
         }
     }
+
+
+
+
 
 
 
