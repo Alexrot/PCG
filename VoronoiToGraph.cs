@@ -9,7 +9,7 @@ public class VoronoiToGraph : MonoBehaviour
 
     Graph poligoni;
     float maxCanvas=0;
-
+    Node startingPoint;
 
 
     /// <summary>
@@ -20,6 +20,12 @@ public class VoronoiToGraph : MonoBehaviour
     /// </summary>
     /// <param name="archiDelGrafo"></param>
     /// 
+    public Node GetStartingPoint()
+    {
+        return startingPoint;
+    }
+
+
     public VoronoiToGraph()
     {
         poligoni = new Graph();
@@ -56,6 +62,7 @@ public class VoronoiToGraph : MonoBehaviour
     public void SearchGraph()
     {
         Node altoSx = poligoni.AddNode(new Vector2(0f, 0f));
+        startingPoint = altoSx;
         Node altoDx = poligoni.AddNode(new Vector2(maxCanvas, 0f));
         Node bassoSx = poligoni.AddNode(new Vector2(0f, maxCanvas));
         Node bassoDx = poligoni.AddNode(new Vector2(maxCanvas, maxCanvas));

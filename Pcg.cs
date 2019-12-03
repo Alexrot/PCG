@@ -12,7 +12,8 @@ public class Pcg : MonoBehaviour
     
     public Text tBase;
     VoronoiToGraph vtg;
-    public int polygonNumber = 10;
+    LoopFinder poligoni;
+    int polygonNumber = 5;
 
     private Dictionary<Vector2, Site> puntiLloyd;
     private List<Edge> archiDelGrafo;
@@ -30,7 +31,10 @@ public class Pcg : MonoBehaviour
         archiDelGrafo = voronoi.Edges;
         vtg.GeneraGrafo(archiDelGrafo, 512f);
         Graph grafoFinale = vtg.GetGraph();
-        DisplayVoronoiDiagram(points, archiDelGrafo);
+        
+        poligoni = new LoopFinder();
+        poligoni.FindLoop(vtg.GetStartingPoint());
+        //DisplayVoronoiDiagram(points, archiDelGrafo);
         //tBase.text = archiDelGrafo.ToString()+ "";
         
     }

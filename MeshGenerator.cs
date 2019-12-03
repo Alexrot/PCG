@@ -13,7 +13,7 @@ public class MeshGenerator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-         poligon= Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
+         
 
          mesh = new Mesh();
         /*
@@ -34,8 +34,9 @@ public class MeshGenerator : MonoBehaviour
         
     }
 
-    void PolyGen(List<Node> poligono)
+    public void PolyGen(List<Node> poligono)
     {
+        poligon = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
         int pos=0;
         Vector3[] vertice = new Vector3[poligono.Count];
         foreach(Node a in poligono)
