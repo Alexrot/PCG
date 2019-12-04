@@ -9,8 +9,9 @@ using UnityEngine.UI;
 
 public class Pcg : MonoBehaviour
 {
-    
+    public Transform poligono;
     public Text tBase;
+    public int maxCanvas= 512;
     VoronoiToGraph vtg;
     LoopFinder poligoni;
     int polygonNumber = 5;
@@ -22,27 +23,27 @@ public class Pcg : MonoBehaviour
     {
         vtg = new VoronoiToGraph();
         //genera un immagine su cui lloyd e voronoi lavoreranno
-        Rect bounds = new Rect(0, 0, 512, 512);
+        Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(polygonNumber);
         //genero voronoi e modifico tramite lloyd
         Voronoi voronoi = new Voronoi(points, bounds, 4);
         puntiLloyd = voronoi.SitesIndexedByLocation;
         archiDelGrafo = voronoi.Edges;
-        vtg.GeneraGrafo(archiDelGrafo, 512f);
+        vtg.GeneraGrafo(archiDelGrafo, maxCanvas);
         Graph grafoFinale = vtg.GetGraph();
         
         poligoni = new LoopFinder();
-        poligoni.FindLoop(vtg.GetStartingPoint());
-        //DisplayVoronoiDiagram(points, archiDelGrafo);
+        poligoni.FindLoop(vtg.GetStartingPoint(), poligono);
+        //DisplayVoronoiDiagram(points, vtg.poligoni.arcs);//mio grafo
+        //DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
         //tBase.text = archiDelGrafo.ToString()+ "";
-        
+
     }
 
 
 
     //test
-
     private void DisplayVoronoiDiagram(List<Vector2> points, List<Edge> archiDelGrafo)
     {
         Texture2D tx = new Texture2D(512, 512);
@@ -60,6 +61,24 @@ public class Pcg : MonoBehaviour
         tx.Apply();
 
         this.GetComponent<Renderer>().material.mainTexture = tx;
+    }
+    private void DisplayVoronoiDiagram(List<Vector2> points, List<Arc> archiDelGrafo)
+    {
+        Texture2D tx = new Texture2D(maxCanvas, maxCanvas);
+        foreach (Vector2 kv in points)
+        {
+            tx.SetPixel((int)kv.x, (int)kv.y, Color.black);
+        }
+        foreach (Arc edge in archiDelGrafo)
+        {
+            // if the edge doesn't have clippedEnds, if was not within the bounds, dont draw it
+            //if (edge.ClippedEnds == null) continue;
+
+            DrawLine(edge.a.position, edge.b.position, tx, Color.black);
+        }
+        tx.Apply();
+
+        //this.GetComponent<Renderer>().material.mainTexture = tx;
     }
     private void DrawLine(Vector2 p0, Vector2 p1, Texture2D tx, Color c, int offset = 0)
     {
@@ -102,7 +121,7 @@ public class Pcg : MonoBehaviour
         List<Vector2> points = new List<Vector2>();
         for (int i = 0; i < polygonNumber; i++)
         {
-            points.Add(new Vector2(Random.Range(0, 512), Random.Range(0, 512)));
+            points.Add(new Vector2(Random.Range(0, maxCanvas), Random.Range(0, maxCanvas)));
             
         }
 

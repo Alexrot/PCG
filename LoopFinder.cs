@@ -51,9 +51,10 @@ public class LoopFinder : MonoBehaviour
     List<Arc> percorsoUsato= new List<Arc>();
     List<Node> livello;
     Boolean loop = false;
-    Boolean complete = false;
+    //Boolean complete = false;
     List<List<Node>> matrice;
     public MeshGenerator poliGen;
+    Transform poligono;
 
 
     List<Node> loopNode;
@@ -64,15 +65,22 @@ public class LoopFinder : MonoBehaviour
 
 
     int matrixLayer = 0;
-    
-    public void FindLoop(Node start)
+
+    public void FindLoop(Node node, Transform p)
     {
         poliGen = new MeshGenerator();
         loopArc = new List<Arc>();
         loopNode = new List<Node>();
         livello = new List<Node>();
-        matrice =new List<List<Node>>();
-        List<Node> layerNode =new List<Node>();
+        matrice = new List<List<Node>>();
+        
+        poligono = p;
+        FindLoops(node);
+    }
+
+    public void FindLoops(Node start)
+    {
+        List<Node> layerNode = new List<Node>();
 
         /// passo 1
         /// seleziona un punto di partenza
@@ -94,7 +102,7 @@ public class LoopFinder : MonoBehaviour
                     livello.AddRange(layerNode);
                     Usato(a);
                 }
-                matrice.Add(layerNode.ToList());
+                matrice.Add(livello.ToList());
                 IsLoop(matrice);
             }
 
@@ -136,6 +144,8 @@ public class LoopFinder : MonoBehaviour
         ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
         List<Node> duplicato = new List<Node>();
+        //Debug.Log(matrice[matrixLayer].Count);
+        //Debug.Log(matrice[matrixLayer - 1].Count);
         duplicato.Add(TrovaDuplicato());
         loopNode.Add(duplicato[0]);
         BackTrack(duplicato);
@@ -150,7 +160,7 @@ public class LoopFinder : MonoBehaviour
         }
         ///passo 6*
         ///passa il ciclo alla funzione che genera il poligono
-        poliGen.PolyGen(loopNode);
+        poliGen.PolyGen(loopNode,poligono);
         ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
         //LookForNext();
@@ -170,7 +180,8 @@ public class LoopFinder : MonoBehaviour
         List<Node> lastTwo=new List<Node>();
         lastTwo.AddRange(matrice[matrixLayer]);
         lastTwo.AddRange(matrice[matrixLayer-1]);
-        Debug.Log("non e lastTwo il problema");
+        foreach(Node a in lastTwo)
+        Debug.Log("trovaaaaaaaaaaaaaaaaaaaatoooooooooooooooooooooooo:"+a.position);
         if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
         {
             loop = true;
@@ -184,7 +195,11 @@ public class LoopFinder : MonoBehaviour
         /*aggiunge gli archi appena visitati a quelli che non devono essere piu presi in futuro*/
         foreach(Arc visitato in Node.ConnectedArc())
         {
-            percorsoUsato.Add(visitato);
+            if (!percorsoUsato.Contains(visitato))
+            {
+                percorsoUsato.Add(visitato);
+            }
+            
         }
 
     }
@@ -247,11 +262,15 @@ private void ControlloVuoto(Arc[] c)
         //controlla le ultime 2 righe per trovare duplicati
         List<Node> ultimeDue = new List<Node>();
         matrixLayer = matrice.Count();
-        ultimeDue.AddRange(matrice[matrixLayer]);
-        ultimeDue.AddRange(matrice[matrixLayer - 1]);
+        Debug.Log(matrixLayer);
 
-        Debug.Log("errore linq LoopFinder:TrovaDuplicato");
-        Node duplicates = (Node)ultimeDue.GroupBy(s => s).Where(s => s.Count() > 1).First().First();
+        ultimeDue.AddRange(matrice[matrixLayer-1]);
+        ultimeDue.AddRange(matrice[matrixLayer - 2]);
+
+        Debug.Log("duplicato trovato");
+
+        //Node duplicates = (Node)ultimeDue.GroupBy(s => s).SelectMany(grp => grp.Skip(1));
+        Node duplicates =(Node)ultimeDue.GroupBy(s => s).Where(s => s.Count() > 1).First().First();
 
         return duplicates;
     }
@@ -276,7 +295,7 @@ private void ControlloVuoto(Arc[] c)
             }
             //controlla per errore di indici
             //debug.log
-        foreach(Node nodiLivello in matrice[matrixLayer - 1])
+        foreach(Node nodiLivello in matrice[matrixLayer - 2])
         {
             if (nodiVicini.Contains(nodiLivello))
             {
@@ -351,16 +370,11 @@ private void ControlloVuoto(Arc[] c)
                 }
                 if (trovato)
                 {
-                    FindLoop(a);
+                    FindLoops(a);
                 }
             }
         }
     }
-
-
-
-
-
 
 
 }

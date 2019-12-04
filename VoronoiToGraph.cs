@@ -7,7 +7,7 @@ using UnityEngine;
 public class VoronoiToGraph : MonoBehaviour
 {
 
-    Graph poligoni;
+    public Graph poligoni;
     float maxCanvas=0;
     Node startingPoint;
 

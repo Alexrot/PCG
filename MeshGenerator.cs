@@ -13,9 +13,9 @@ public class MeshGenerator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-         
 
-         mesh = new Mesh();
+        
+         
         /*
         Vector3[] vertices = new Vector3[5];
 
@@ -34,9 +34,12 @@ public class MeshGenerator : MonoBehaviour
         
     }
 
-    public void PolyGen(List<Node> poligono)
+    public void PolyGen(List<Node> poligono, Transform p)
     {
-        poligon = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
+
+        mesh = new Mesh();
+        poligon = Instantiate(p, new Vector3(0, 0, 0), Quaternion.identity);
+
         int pos=0;
         Vector3[] vertice = new Vector3[poligono.Count];
         foreach(Node a in poligono)
@@ -45,25 +48,32 @@ public class MeshGenerator : MonoBehaviour
             pos++;
         }
         mesh.vertices = vertice;
-        int[] point = { };
+        List<int> point = new List<int>();
         int i = 0;
 
         while (true)
         {
-            point[i] = i;
+            
+            point.Add(0);
             i++;
-            point[i] = i;
+            point.Add(i);
             i++;
-            point[i] = i;
-            i++;
-            if (i == point.Length)
+            point.Add(i);
+            
+            if (i == point.Count-1)
             {
                 break;
             }
-            i--;
+            //i--;
         }
-        mesh.triangles = point;
+        foreach(int a in point)
+        {
+            Debug.Log(a);
+        }
+        int[] points = point.ToArray();
+        mesh.triangles = points;
         poligon.GetComponent<MeshFilter>().mesh = mesh;
+        Debug.Log("a");
     }
 
 
