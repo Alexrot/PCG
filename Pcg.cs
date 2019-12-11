@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 using csDelaunay;
 using System;
 using Random = UnityEngine.Random;
@@ -32,7 +33,13 @@ public class Pcg : MonoBehaviour
         archiDelGrafo = voronoi.Edges;
         vtg.GeneraGrafo(archiDelGrafo, maxCanvas);
         Graph grafoFinale = vtg.GetGraph();
-        
+        //vtg.MergeNodes();
+        foreach (Node a in grafoFinale.nodes)
+        {
+            Debug.Log(a.position+"questo e un nodo del grafo dove x ="+a.position.x+ " y ="+a.position.y);
+        }
+        Debug.Log(grafoFinale.nodes.Count);
+        DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
         poligoni = new LoopFinder();
         poligoni.FindLoop(vtg.GetStartingPoint(), poligono);
         //DisplayVoronoiDiagram(points, vtg.poligoni.arcs);//mio grafo
@@ -93,6 +100,9 @@ public class Pcg : MonoBehaviour
         int sy = y0 < y1 ? 1 : -1;
         int err = dx - dy;
 
+
+
+        //nodi esatti
         Debug.Log("linea da: x" + x0 + " y " + y0);
         Debug.Log("a: x" + x1 + " y " + y1);
 
@@ -117,7 +127,7 @@ public class Pcg : MonoBehaviour
     //PUNTI PRE-LLOYD
     private List<Vector2> CreateRandomPoint(int polygonNumber)
     {
-      
+        
         List<Vector2> points = new List<Vector2>();
         for (int i = 0; i < polygonNumber; i++)
         {

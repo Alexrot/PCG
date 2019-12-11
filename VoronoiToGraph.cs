@@ -37,10 +37,13 @@ public class VoronoiToGraph : MonoBehaviour
     }
 
 
+
+
+
     //genera il grafo dei nodi interni
     public void  GeneraGrafo(List<Edge> archiDelGrafo, float maxCanvas)
     {
-        Debug.Log("test11111111111111");
+        
         this.maxCanvas = maxCanvas;
         foreach (Edge edge in archiDelGrafo)
         {
@@ -49,12 +52,14 @@ public class VoronoiToGraph : MonoBehaviour
 
              
             poligoni.AddEdge(poligoni.AddNode(edge.ClippedEnds[LR.LEFT]), poligoni.AddNode(edge.ClippedEnds[LR.RIGHT]));
-            Debug.Log("22222222222222222222222");
+            
         }
         SearchGraph();
     }
 
-    public Graph Get() { return poligoni; }
+
+    
+
 
 
 
@@ -101,7 +106,7 @@ public class VoronoiToGraph : MonoBehaviour
             {
                 yMax.Add(a);
             }
-            Debug.Log("vtg LISTE BORDI");
+
         }
 
         Debug.Log("vtg START CONNECTION");
@@ -120,7 +125,7 @@ public class VoronoiToGraph : MonoBehaviour
         switch(bordo)
         {
             case "nord":
-                Debug.Log("vtg BORDO NORD");
+
                 a.Remove(startNode);
                 while (a.Count != 0)
                 {
@@ -145,7 +150,7 @@ public class VoronoiToGraph : MonoBehaviour
                 break;
 
             case "sud":
-                Debug.Log("vtg BORDO SUD");
+
                 a.Remove(startNode);
                 while (a.Count != 0)
                 {
@@ -170,11 +175,11 @@ public class VoronoiToGraph : MonoBehaviour
                 break;
 
             case "ovest":
-                Debug.Log("vtg BORDO OVEST");
+
                 a.Remove(startNode);
                 while (a.Count != 0)
                 {
-                    Debug.Log("vtg BORDO OVEST" + a.Count);
+
                     Node next = a[0];
                     for (int i = 1; i < a.Count - 1; i++)
                     {
@@ -183,22 +188,22 @@ public class VoronoiToGraph : MonoBehaviour
                             next = a[i];
                         }
                     }
-                    Debug.Log("vtg BORDO OVEST" + a.Count);
+
                     poligoni.AddEdgeLimit(startingPoint, next);
                     startingPoint = next;
                     a.Remove(next);
                     if (a.Count == 1)
                     {
-                        Debug.Log("vtg BORDO OVEST if entri?" + a.Count);
+
                         poligoni.AddEdgeLimit(startingPoint, a[0]);
                         a.Remove(a[0]);
                     }
                 }
-                Debug.Log("vtg BORDO OVEST sei uscito?" + a.Count);
+
                 break;
 
             case "est":
-                Debug.Log("vtg BORDO EST");
+
                 a.Remove(startNode);
                 while (a.Count != 0)
                 {

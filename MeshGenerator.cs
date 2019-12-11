@@ -41,16 +41,17 @@ public class MeshGenerator : MonoBehaviour
         poligon = Instantiate(p, new Vector3(0, 0, 0), Quaternion.identity);
 
         int pos=0;
-        Vector3[] vertice = new Vector3[poligono.Count];
+        Vector3[] vertice = new Vector3[20];
         foreach(Node a in poligono)
         {
             vertice[pos] = a.GetPosition();
             pos++;
         }
         mesh.vertices = vertice;
-        List<int> point = new List<int>();
-        int i = 0;
+        //List<int> point = new List<int>();
+        //int i = 0;
 
+        /*
         while (true)
         {
             
@@ -66,14 +67,49 @@ public class MeshGenerator : MonoBehaviour
             }
             //i--;
         }
-        foreach(int a in point)
-        {
-            Debug.Log(a);
+        */
+        //provo a dare array gia prestabiliti
+        int[] points = new int[poligono.Count];
+        switch (poligono.Count)
+            {
+            case 3:
+                points = new int[] { 0, 1, 2};
+                break;
+            case 4:
+                points = new int[] { 0, 1, 2, 0, 2, 3 };
+                break;
+            case 5:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4};
+                break;
+            case 6:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5};
+                break;
+            case 7:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6};
+                break;
+            case 8:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6 ,7};
+                break;
+            case 9:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8 };
+                break;
+            case 10:
+                points = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 9};
+                break;
+                
         }
-        int[] points = point.ToArray();
+        
+        
+        
         mesh.triangles = points;
         poligon.GetComponent<MeshFilter>().mesh = mesh;
-        Debug.Log("a");
+        Debug.Log(points.Length+"numero"+ poligono.Count);
+        foreach(Node a in poligono)
+        {
+            Debug.Log(a.position);
+        }
+
+
     }
 
 

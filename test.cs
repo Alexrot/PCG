@@ -21,16 +21,31 @@ public class test : MonoBehaviour
 
         Mesh mesh = new Mesh();
 
-        Vector3[] vertices = new Vector3[5];
+        Vector3[] vertices = new Vector3[7];
+        List<Node> nodes = new List<Node>();
 
-        vertices[0] = new Vector3(.5f, .5f);
-        vertices[1] = new Vector3(-1, .8f);
-        vertices[2] = new Vector3(-.2f, 1.2f);
+        vertices[0] = new Vector3(1f, .5f);
+        vertices[1] = new Vector3(1.5f, .5f);
+        vertices[2] = new Vector3(.5f, 1.5f);
+        vertices[3] = new Vector3(.25f, .5f);
+        vertices[4] = new Vector3(.5f, .5f);
+        vertices[5] = new Vector3(-1, .8f);
+        vertices[6] = new Vector3(-.2f, 1.2f);
         //vertices[3] = new Vector3(.8f, 1.4f);
         //vertices[4] = new Vector3(1, .8f);
+        nodes.Add(new Node(vertices[0]));
+        nodes.Add(new Node(vertices[1]));
+        nodes.Add(new Node(vertices[2]));
+        nodes.Add(new Node(vertices[3]));
+        nodes.Add(new Node(vertices[4]));
+        nodes.Add(new Node(vertices[5]));
+        nodes.Add(new Node(vertices[6]));
 
         mesh.vertices = vertices;
-
+        Node a =nodes.Find(x => x.position.Equals(new Vector3(.5f, .5f)));
+        bool b = nodes.Exists(x => x.position.Equals(new Vector3(1f, .5f)));
+        Debug.Log(a.position);
+        Debug.Log(b);
         mesh.triangles = new int[] { 0, 1, 2/*, 0, 2, 3, 0, 3, 4 */};
         //GetComponent<MeshFilter>().mesh = mesh;
         newPoly.GetComponent<MeshFilter>().mesh = mesh;
