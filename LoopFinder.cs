@@ -109,7 +109,7 @@ public class LoopFinder : MonoBehaviour
             /// passo 4(TROVATO)
             /// se c'è hai trovato un ciclo, se non c'è ripeti il passo 2
             //TO DO
-            Debug.Log("loop e="+loop);
+            
             
             LoopFound();
             CheckGraph();
@@ -163,7 +163,7 @@ public class LoopFinder : MonoBehaviour
         poliGen.PolyGen(loopNode,poligono);
         ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-        //LookForNext();
+        LookForNext();
 
 
     }
@@ -175,13 +175,13 @@ public class LoopFinder : MonoBehaviour
     /// /// controlla che non ci sia un dupicato 
     private void IsLoop(List<List<Node>> matrice)
     {
-        Debug.Log(" e lastTwo il problema");
+        
         //controllo l'ultimo e il penultimo, poiche non è possibile che si generano cicli tra livelli più distanti
         List<Node> lastTwo=new List<Node>();
         lastTwo.AddRange(matrice[matrixLayer]);
         lastTwo.AddRange(matrice[matrixLayer-1]);
         foreach(Node a in lastTwo)
-        Debug.Log("trovaaaaaaaaaaaaaaaaaaaatoooooooooooooooooooooooo:"+a.position);
+        
         if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
         {
             loop = true;
@@ -262,7 +262,7 @@ private void ControlloVuoto(Arc[] c)
         //controlla le ultime 2 righe per trovare duplicati
         List<Node> ultimeDue = new List<Node>();
         matrixLayer = matrice.Count();
-        Debug.Log(matrixLayer);
+        
 
         ultimeDue.AddRange(matrice[matrixLayer-1]);
         ultimeDue.AddRange(matrice[matrixLayer - 2]);
@@ -314,9 +314,9 @@ private void ControlloVuoto(Arc[] c)
         ///passo 3*
         ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
         ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-        if (prossimiDaControllare.Count != 1)
+        if (matrixLayer!=1)
         {
-            //e uno solo se siamo arrivati al nodo sorgente da cui siamo partiti
+            //e uno solo se siamo in cima alla matrice
             BackTrack(prossimiDaControllare);
         }
         
@@ -336,6 +336,7 @@ private void ControlloVuoto(Arc[] c)
         
         foreach(Node a in loopNode)
         {
+            /*
             vicini.AddRange(a.NearNodes(a.ConnectedArc()).ToList());
             vicini.AddRange(loopNode);
             Node[] u = vicini
@@ -344,12 +345,27 @@ private void ControlloVuoto(Arc[] c)
                     .Select(g => g.Key).ToArray();
             foreach(Node b in u)
             {
-                if(!loopArc.Contains(a.FindArc(a, b)))
+                Arc dev = a.FindArc(a, b);
+                if(!loopArc.Contains(dev))
                 {
-                    loopArc.Add(a.FindArc(a, b));
+                    loopArc.Add(dev);
                 }                
             }
-
+            */
+            foreach (Node b in loopNode)
+            {
+                if (a.EsisteArco(a, b))
+                {
+                    Arc dev = a.FindArc(a, b);
+                    if (!loopArc.Contains(dev))
+                    {
+                        loopArc.Add(dev);
+                        dev.ReduceValue();
+                    }
+                
+                }
+            }
+            
         }
     }
 

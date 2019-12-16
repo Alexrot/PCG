@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Graph
@@ -14,19 +15,34 @@ public class Graph
         arcs = new List<Arc>();
         }
 
-
+        void StampaNodes()
+    {
+        foreach(Node a in nodes)
+        {
+            Debug.Log(a.position);
+        }
+    }
 
 
         public Node AddNode(Vector2 n)
         {
+        int x0 = (int)n.x;
+        int y0 = (int)n.y;
+        Node c = new Node(new Vector2(x0,y0));
+        //StampaNodes();
+        if (nodes.Exists(x =>x.position.Equals(new Vector2(x0, y0))))
+        {
+
+            return nodes.Find(x => x.position.Equals(new Vector2(x0, y0)));
+        }
+        else
+        {
             
-            Node c = new Node(n);
-            if (!nodes.Contains(c))
-            {
             nodes.Add(c);
-            }
+            return c;
+        }
             
-        return c;
+        
         }
 
 
@@ -85,27 +101,25 @@ public class Graph
         //DeleteEdge(c.ConnectedArc());
         //passando il riferimento all'arco non c'è bisogno che io lo cancelli
         //HAHAHAHHAHAHAHAH NO T.T
-        nodes.Remove(c);
-        
-        
+        nodes.Remove(c);   
     }
-
-
-
-
-
 
     //cancella tutti gli archi del array c
     public void DeleteEdge(Arc[] c)
-    {
-        
+    {        
         for (int i = 0; i < c.Length; i++)
         {
             arcs.Remove(c[i]);
         }
-      
-        
     }
+
+
+
+
+
+
+
+
 
     public void UpdateEdge(Arc c)
     {
