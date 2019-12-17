@@ -10,18 +10,22 @@ using UnityEngine.UI;
 
 public class Pcg : MonoBehaviour
 {
-    public Transform poligono;
+    
     public Text tBase;
     public int maxCanvas= 512;
     VoronoiToGraph vtg;
     LoopFinder poligoni;
-    int polygonNumber = 5;
+    public int polygonNumber = 5;
 
     private Dictionary<Vector2, Site> puntiLloyd;
     private List<Edge> archiDelGrafo;
 
+    
+    public Transform poligono;
+
     private void Start()
     {
+        Node exit = new Node(new Vector2(-1, -1));
         vtg = new VoronoiToGraph();
         //genera un immagine su cui lloyd e voronoi lavoreranno
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
@@ -41,7 +45,21 @@ public class Pcg : MonoBehaviour
         Debug.Log(grafoFinale.nodes.Count);
         DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
         poligoni = new LoopFinder();
-        poligoni.FindLoop(vtg.GetStartingPoint(), poligono);
+        poligoni.PolyTransform(poligono, exit);
+        Node next = vtg.GetStartingPoint();
+        do
+        {
+            next =poligoni.FindLoops(next);
+        } while (next != exit);
+        
+        
+        foreach(Arc a in grafoFinale.arcs)
+        {
+            Debug.Log(a.value+"dell'arco che va da "+a.a.position+" a "+a.b.position);
+        }
+
+
+
         //DisplayVoronoiDiagram(points, vtg.poligoni.arcs);//mio grafo
         //DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
         //tBase.text = archiDelGrafo.ToString()+ "";

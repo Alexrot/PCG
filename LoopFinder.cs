@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LoopFinder : MonoBehaviour
 {
-    /// <summary>
+    /// 
     /// passo 1
     /// seleziona un punto di partenza
     /// passo 2 
@@ -43,45 +43,57 @@ public class LoopFinder : MonoBehaviour
             ///elimina archi e nodi morti (senza value, nodi o archi)/*/*/*/*/*/*/*/*/solo nodi/*/*/*/*/*/*/*/*
             ///passo 8*
             ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-    /// </summary>
+    /// 
 
 
 
 
-    List<Arc> percorsoUsato= new List<Arc>();
+    List<Arc> percorsoUsato;
     List<Node> livello;
-    Boolean loop = false;
-    //Boolean complete = false;
+    Boolean loop;
     List<List<Node>> matrice;
     public MeshGenerator poliGen;
     Transform poligono;
 
-
+    Node exit;
     List<Node> loopNode;
     List<Arc> loopArc;
-    
-    
+    int matrixLayer;
 
 
-
-    int matrixLayer = 0;
-
-    public void FindLoop(Node node, Transform p)
+    public LoopFinder()
     {
-        poliGen = new MeshGenerator();
+        percorsoUsato = new List<Arc>();
         loopArc = new List<Arc>();
         loopNode = new List<Node>();
         livello = new List<Node>();
         matrice = new List<List<Node>>();
         
-        poligono = p;
-        FindLoops(node);
+        poliGen = new MeshGenerator();
     }
 
-    public void FindLoops(Node start)
+    void PReset()
     {
-        List<Node> layerNode = new List<Node>();
+        percorsoUsato.Clear();
+        loopArc.Clear();
+        loopNode.Clear();
+        livello.Clear();
+        matrice.Clear();
+        matrixLayer = 0;
+        loop = false;
+    }
+    
+    public void PolyTransform(Transform p, Node ex)
+    {
+        poligono = p;
+        exit = ex;
+    }
 
+    public Node FindLoops(Node start)
+    {
+
+        PReset();
+        List<Node> layerNode = new List<Node>();
         /// passo 1
         /// seleziona un punto di partenza
         livello.Add(start);
@@ -102,24 +114,41 @@ public class LoopFinder : MonoBehaviour
                     livello.AddRange(layerNode);
                     Usato(a);
                 }
+            if (livello.Count <= 1)
+            {
+                Debug.Log("errore");
+                Debug.Log("nodo iniziale " + matrice[0][0].position);
+                return exit;
+            }
                 matrice.Add(livello.ToList());
                 IsLoop(matrice);
             }
 
             /// passo 4(TROVATO)
             /// se c'è hai trovato un ciclo, se non c'è ripeti il passo 2
-            //TO DO
-            
-            
-            LoopFound();
-            CheckGraph();
+     
+        LoopFound();
+        ///passo 8*
+        ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
+        Node next = LookForNext();
         
-
+        if (CheckNext(next))
+        {
+            return next;
+        }
+        else
+        {
+            return new Node(new Vector2(-1, -1));
+        }
+        
+        //return exit;
     }
 
-    private void CheckGraph()
+
+    private bool CheckNext(Node a)
     {
-        //controll che il grafo non sia vuoto e che ci siano ancora nodi da scegliere
+        //controll che il prossimo nodo non sia vuoto 
+        return true;
     }
 
     /// passo 5
@@ -153,17 +182,17 @@ public class LoopFinder : MonoBehaviour
         ///controlla che sia un ciclo
         ///passo 5 *
         ///diminuisci tutti gli archi del ciclo di 1
-        LoopCheck();
+        OrdinaLoop();
+        /*
         foreach(Arc a in loopArc)
         {
             a.ReduceValue();
         }
+        */
         ///passo 6*
         ///passa il ciclo alla funzione che genera il poligono
         poliGen.PolyGen(loopNode,poligono);
-        ///passo 8*
-        ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-        LookForNext();
+        
 
 
     }
@@ -179,13 +208,31 @@ public class LoopFinder : MonoBehaviour
         //controllo l'ultimo e il penultimo, poiche non è possibile che si generano cicli tra livelli più distanti
         List<Node> lastTwo=new List<Node>();
         lastTwo.AddRange(matrice[matrixLayer]);
-        lastTwo.AddRange(matrice[matrixLayer-1]);
-        foreach(Node a in lastTwo)
-        
-        if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
+        foreach (Node a in lastTwo)
+
+            if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
+            {
+                loop = true;
+                if (loop)
+                {
+                    break;
+                }
+            }
+        if (!loop)
         {
-            loop = true;
+            lastTwo.AddRange(matrice[matrixLayer - 1]);
+            foreach (Node a in lastTwo)
+
+                if (lastTwo.GroupBy(n => n).Any(c => c.Count() > 1))
+                {
+                    loop = true;
+                    if (loop)
+                    {
+                        break;
+                    }
+                }
         }
+        
     }
 
 
@@ -247,7 +294,9 @@ private void ControlloVuoto(Arc[] c)
             if (!percorsoUsato.Contains(trovato)&&trovato.GetValue()>0)
             {
                 retArc.Add(trovato);
+                
             }
+            
         }
         return retArc;
     }
@@ -295,7 +344,7 @@ private void ControlloVuoto(Arc[] c)
             }
             //controlla per errore di indici
             //debug.log
-        foreach(Node nodiLivello in matrice[matrixLayer - 2])
+        foreach(Node nodiLivello in matrice[matrixLayer - 1])
         {
             if (nodiVicini.Contains(nodiLivello))
             {
@@ -330,66 +379,105 @@ private void ControlloVuoto(Arc[] c)
     ///controlla che sia un ciclo
     ///passo 5 *
     ///diminuisci tutti gli archi del ciclo di 1
-    private void LoopCheck()
+    void OrdinaLoop()
     {
-        List<Node> vicini = new List<Node>();
-        
-        foreach(Node a in loopNode)
+        List<Node> nodiOrdinati = new List<Node>();
+        Node nextToAdd = loopNode[0];
+        nodiOrdinati.Add(nextToAdd);
+        foreach(Node a in loopNode[0].NearNodes(loopNode[0].ConnectedArc()))
         {
-            /*
-            vicini.AddRange(a.NearNodes(a.ConnectedArc()).ToList());
-            vicini.AddRange(loopNode);
-            Node[] u = vicini
-                    .GroupBy(i => i)
-                    .Where(g => g.Count() > 1)
-                    .Select(g => g.Key).ToArray();
-            foreach(Node b in u)
+            if (loopNode.Contains(a))
             {
-                Arc dev = a.FindArc(a, b);
-                if(!loopArc.Contains(dev))
-                {
-                    loopArc.Add(dev);
-                }                
+                nextToAdd=a;
+                ReduceArc(nodiOrdinati[nodiOrdinati.Count - 1], a);
+                break;
             }
-            */
-            foreach (Node b in loopNode)
-            {
-                if (a.EsisteArco(a, b))
-                {
-                    Arc dev = a.FindArc(a, b);
-                    if (!loopArc.Contains(dev))
-                    {
-                        loopArc.Add(dev);
-                        dev.ReduceValue();
-                    }
-                
-                }
-            }
-            
+        }
+        do
+        {
+            nodiOrdinati.Add(nextToAdd);
+            //ReduceArc(nodiOrdinati[nodiOrdinati.Count - 1], nodiOrdinati[nodiOrdinati.Count - 2]);
+            nextToAdd = NextToLoop(nodiOrdinati);
+        } while (nextToAdd != loopNode[0]);
+        ReduceArc(nodiOrdinati[nodiOrdinati.Count - 1], loopNode[0]);
+
+        loopNode.Clear();
+        loopNode.AddRange(nodiOrdinati);
+    }
+
+    void ReduceArc(Node a, Node b)
+    {
+        Arc dev = a.FindArc(a, b);
+        if (!loopArc.Contains(dev))
+        {
+            loopArc.Add(dev);
+            dev.ReduceValue();
         }
     }
+
+    Node NextToLoop(List<Node> start)
+    {
+        foreach (Node a in start[start.Count-1].NearNodes(start[start.Count - 1].ConnectedArc()))
+        {
+            if (loopNode.Contains(a)&&a!= start[start.Count - 2])
+            {
+                ReduceArc(start[start.Count - 1], a);
+                return a;
+            }
+        }
+        return null;
+    }
+
 
 
     ///passo 8*
     ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
-    private void LookForNext()
+    private Node LookForNext()
     {
+        bool livUno = false;
         bool trovato = false;
-        //controlla il secondo livello della matrice e vedi se ci sono nodi con archi non vuoti che quindi possiamo usare per il prossimo poligono
-        foreach(Node a in matrice[1])
+        Node nextN = matrice[0][0];
+        //controlliamo se il nodo a liv 0 di matrixLayer non ha piu archi uscenti di valore >0
+        foreach (Arc a in nextN.ConnectedArc())
         {
-            foreach(Arc c in a.ConnectedArc())
+            Debug.Log(a.GetValue()+"valore degli archi");
+            if (a.GetValue() > 0)
             {
-                if (c.value == 1)
-                {
-                    trovato = true;
-                }
-                if (trovato)
-                {
-                    FindLoops(a);
-                }
+                livUno = true;
+                Debug.Log(nextN.position);
+                return nextN;
             }
         }
+        if(!livUno)
+        {
+            
+            
+            //controlla il secondo livello della matrice e vedi se ci sono nodi con archi non vuoti che quindi possiamo usare per il prossimo poligono
+            foreach (Node a in matrice[1])
+            {
+                foreach (Arc c in a.ConnectedArc())
+                {
+                    if (c.value == 1)
+                    {
+                        trovato = true;
+                        nextN = a;
+                        break;
+                    }
+                   
+                }
+            }
+
+        }
+        if (trovato)
+        {
+            Debug.Log(nextN.position);
+            return nextN;
+        }
+        else
+        {
+            return matrice[0][0];
+        }
+
     }
 
 
