@@ -44,6 +44,7 @@ public class Pcg : MonoBehaviour
         }
         Debug.Log(grafoFinale.nodes.Count);
         DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
+        /*
         poligoni = new LoopFinder();
         poligoni.PolyTransform(poligono, exit);
         Node next = vtg.GetStartingPoint();
@@ -58,7 +59,7 @@ public class Pcg : MonoBehaviour
             Debug.Log(a.value+"dell'arco che va da "+a.a.position+" a "+a.b.position);
         }
 
-
+        */
 
         //DisplayVoronoiDiagram(points, vtg.poligoni.arcs);//mio grafo
         //DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi

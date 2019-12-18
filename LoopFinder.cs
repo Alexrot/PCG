@@ -59,6 +59,7 @@ public class LoopFinder : MonoBehaviour
     List<Node> loopNode;
     List<Arc> loopArc;
     int matrixLayer;
+    int matrixLayerDev;
 
 
     public LoopFinder()
@@ -80,6 +81,7 @@ public class LoopFinder : MonoBehaviour
         livello.Clear();
         matrice.Clear();
         matrixLayer = 0;
+        matrixLayerDev = 0;
         loop = false;
     }
     
@@ -138,10 +140,11 @@ public class LoopFinder : MonoBehaviour
         }
         else
         {
-            return new Node(new Vector2(-1, -1));
+            
+            return exit;
         }
         
-        //return exit;
+        
     }
 
 
@@ -175,25 +178,33 @@ public class LoopFinder : MonoBehaviour
         List<Node> duplicato = new List<Node>();
         //Debug.Log(matrice[matrixLayer].Count);
         //Debug.Log(matrice[matrixLayer - 1].Count);
-        duplicato.Add(TrovaDuplicato());
-        loopNode.Add(duplicato[0]);
-        BackTrack(duplicato);
-        ///passo 4 *
-        ///controlla che sia un ciclo
-        ///passo 5 *
-        ///diminuisci tutti gli archi del ciclo di 1
-        OrdinaLoop();
-        /*
-        foreach(Arc a in loopArc)
+        duplicato.AddRange(TrovaDuplicato());
+        int i = 0;
+        foreach (Node a in duplicato)
         {
-            a.ReduceValue();
-        }
-        */
-        ///passo 6*
-        ///passa il ciclo alla funzione che genera il poligono
-        poliGen.PolyGen(loopNode,poligono);
-        
+            loopNode.Add(duplicato[i]);
+            matrixLayerDev = matrixLayer;
+            Debug.Log(matrixLayerDev);
+            BackTrack(duplicato);
+            i++;
 
+
+            ///passo 4 *
+            ///controlla che sia un ciclo
+            ///passo 5 *
+            ///diminuisci tutti gli archi del ciclo di 1
+            OrdinaLoop();
+            /*
+            foreach(Arc a in loopArc)
+            {
+                a.ReduceValue();
+            }
+            */
+            ///passo 6*
+            ///passa il ciclo alla funzione che genera il poligono
+            poliGen.PolyGen(loopNode, poligono);
+
+        }
 
     }
 
@@ -306,7 +317,7 @@ private void ControlloVuoto(Arc[] c)
 
     ///passo 1*
     ///trova il duplicato
-    private Node TrovaDuplicato()
+    private List<Node> TrovaDuplicato()
     {
         //controlla le ultime 2 righe per trovare duplicati
         List<Node> ultimeDue = new List<Node>();
@@ -319,7 +330,10 @@ private void ControlloVuoto(Arc[] c)
         Debug.Log("duplicato trovato");
 
         //Node duplicates = (Node)ultimeDue.GroupBy(s => s).SelectMany(grp => grp.Skip(1));
-        Node duplicates =(Node)ultimeDue.GroupBy(s => s).Where(s => s.Count() > 1).First().First();
+        List<Node> duplicates = ultimeDue.GroupBy(x => x)
+              .Where(g => g.Count() > 1)
+              .Select(y => y.Key)
+              .ToList();
 
         return duplicates;
     }
@@ -327,52 +341,62 @@ private void ControlloVuoto(Arc[] c)
 
     ///passo 2*
     ///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
-    private void BackTrack(List<Node> a)
+    /// <summary>
+    /// torna ai livelli superiori della matrice per trovare i nodi che creano il loop
+    /// </summary>
+    /// <param name="daControllare">lista di nodi da controllare</param>
+    public void BackTrack(List<Node> daControllare)
     {
+        bool secondoDuplicato = false;
+        int currentLayer = matrixLayer;
         List<Node> prossimiDaControllare = new List<Node>();
-        List<Node> nodiVicini =new List<Node>();
-        foreach(Node k in a)
+        List<Node> nodiVicini = new List<Node>();
+        foreach (Node a in daControllare)
         {
-            nodiVicini = k.NearNodes(k.ConnectedArc());
+            //prend tutti i nodi VICINI alla lista di nodi passata
+            nodiVicini = a.NearNodes(a.ConnectedArc());
+
+            Debug.Log(a.position);
         }
 
-            //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
-            //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
-            if (nodiVicini.Contains(loopNode[0]))
-            {
+        //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
+        //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
+        if (matrice[currentLayer - 1].Contains(loopNode[0]))
+        {
             prossimiDaControllare.Add(loopNode[0]);
-            }
-            //controlla per errore di indici
-            //debug.log
-        foreach(Node nodiLivello in matrice[matrixLayer - 1])
+        }
+
+        
+        foreach (Node nodiLivello in matrice[currentLayer - 1])
         {
             if (nodiVicini.Contains(nodiLivello))
             {
                 if (!loopNode.Contains(nodiLivello))
                 {
-
+                    Debug.Log("////////////////////////////////////////////////////////"+nodiLivello.position+" lo aggiungo ai nodi");
                     loopNode.Add(nodiLivello);
                     prossimiDaControllare.Add(nodiLivello);
+                }
+                else
+                {
+                    secondoDuplicato = true;
+                    //trovato duplicato di fine loop
+                    break;
                 }
 
             }
         }
-            
-        //ATTENZIONE POTREBBE PORTARE PROBLEMI
-        matrixLayer--;
-        ///passo 3*
-        ///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
-        ///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-        if (matrixLayer!=1)
+
+        if (!secondoDuplicato)
         {
-            //e uno solo se siamo in cima alla matrice
+            currentLayer--;
             BackTrack(prossimiDaControllare);
         }
-        
-
-        //dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
-        //foreach ()
-
+        Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        foreach (Node a in loopNode)
+        {
+            Debug.Log(a.position);
+        }
     }
 
     ///passo 4 *
@@ -381,6 +405,7 @@ private void ControlloVuoto(Arc[] c)
     ///diminuisci tutti gli archi del ciclo di 1
     void OrdinaLoop()
     {
+        
         List<Node> nodiOrdinati = new List<Node>();
         Node nextToAdd = loopNode[0];
         nodiOrdinati.Add(nextToAdd);
