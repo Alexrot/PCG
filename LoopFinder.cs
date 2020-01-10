@@ -132,6 +132,7 @@ public class LoopFinder : MonoBehaviour
         LoopFound();
         ///passo 8*
         ///cerca nel secondo livello della matrice un nuovo nodo da usare per ricominciare
+        /*
         Node next = LookForNext();
         
         if (CheckNext(next))
@@ -144,7 +145,8 @@ public class LoopFinder : MonoBehaviour
             return exit;
         }
         
-        
+        */
+        return exit;
     }
 
 
@@ -185,7 +187,7 @@ public class LoopFinder : MonoBehaviour
             loopNode.Add(duplicato[i]);
             matrixLayerDev = matrixLayer;
             Debug.Log(matrixLayerDev);
-            BackTrack(duplicato);
+            BackTrack(duplicato, matrixLayer);
             i++;
 
 
@@ -193,7 +195,7 @@ public class LoopFinder : MonoBehaviour
             ///controlla che sia un ciclo
             ///passo 5 *
             ///diminuisci tutti gli archi del ciclo di 1
-            OrdinaLoop();
+            //OrdinaLoop();
             /*
             foreach(Arc a in loopArc)
             {
@@ -202,7 +204,7 @@ public class LoopFinder : MonoBehaviour
             */
             ///passo 6*
             ///passa il ciclo alla funzione che genera il poligono
-            poliGen.PolyGen(loopNode, poligono);
+            //poliGen.PolyGen(loopNode, poligono);
 
         }
 
@@ -345,57 +347,56 @@ private void ControlloVuoto(Arc[] c)
     /// torna ai livelli superiori della matrice per trovare i nodi che creano il loop
     /// </summary>
     /// <param name="daControllare">lista di nodi da controllare</param>
-    public void BackTrack(List<Node> daControllare)
+    public void BackTrack(List<Node> daControllare, int currentLayer)
     {
-        bool secondoDuplicato = false;
-        int currentLayer = matrixLayer;
+        
         List<Node> prossimiDaControllare = new List<Node>();
         List<Node> nodiVicini = new List<Node>();
+        
         foreach (Node a in daControllare)
         {
+            Debug.Log("BACKTRACK " + a.position);
             //prend tutti i nodi VICINI alla lista di nodi passata
-            nodiVicini = a.NearNodes(a.ConnectedArc());
-
-            Debug.Log(a.position);
+            nodiVicini.AddRange(a.NearNodes(a.ConnectedArc()));
+            
         }
-
+                       
         //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
         //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
-        if (matrice[currentLayer - 1].Contains(loopNode[0]))
+        if (matrice[currentLayer - 2].Contains(loopNode[0]))
         {
             prossimiDaControllare.Add(loopNode[0]);
         }
-
-        
-        foreach (Node nodiLivello in matrice[currentLayer - 1])
+        foreach (Node nodiViciniA in nodiVicini)
         {
-            if (nodiVicini.Contains(nodiLivello))
+            Debug.Log("BACKTRACK al livello"+ (currentLayer - 1) + "di " + nodiViciniA.position);
+            if (matrice[currentLayer - 2].Contains(nodiViciniA))
             {
-                if (!loopNode.Contains(nodiLivello))
+                if (!loopNode.Contains(nodiViciniA))
                 {
-                    Debug.Log("////////////////////////////////////////////////////////"+nodiLivello.position+" lo aggiungo ai nodi");
-                    loopNode.Add(nodiLivello);
-                    prossimiDaControllare.Add(nodiLivello);
+                    loopNode.Add(nodiViciniA);
+                    prossimiDaControllare.Add(nodiViciniA);
                 }
-                else
-                {
-                    secondoDuplicato = true;
-                    //trovato duplicato di fine loop
-                    break;
-                }
-
+                
             }
         }
 
-        if (!secondoDuplicato)
+        Debug.Log("BACKTRACK numero di nodi da controllare " + prossimiDaControllare.Count+" e sono");
+        foreach(Node a in prossimiDaControllare)
+        {
+            Debug.Log("BACKTRACK prossimi da controllare:" + a.position);
+        }
+
+        if (prossimiDaControllare.Count==1)
+        {
+            //DUPLICATOOOOOOOOOOOOOOOOOOO
+            Debug.Log("BACKTRACK esco" );
+            
+        }
+        else
         {
             currentLayer--;
-            BackTrack(prossimiDaControllare);
-        }
-        Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        foreach (Node a in loopNode)
-        {
-            Debug.Log(a.position);
+            BackTrack(prossimiDaControllare, currentLayer);
         }
     }
 

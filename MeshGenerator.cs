@@ -34,7 +34,10 @@ public class MeshGenerator : MonoBehaviour
         */
     }
 
-    public void PolyGen(List<Node> poligono, Transform p)
+
+
+
+    public void PolyGen(List<Vector2> poligono, Transform p)
     {
         poligonNumber++;
         Debug.Log("poligoni generati: "+poligonNumber);
@@ -45,10 +48,10 @@ public class MeshGenerator : MonoBehaviour
         List<int> point = new List<int>();
         int pos=0;
         Vector3[] vertice = new Vector3[10];
-        foreach(Node a in poligono)
+        foreach(Vector2 a in poligono)
         {
-            vertice[pos] = a.GetPosition();
-            Debug.Log(a.position + " in posizione " + pos);
+            vertice[pos] = a;
+            Debug.Log(a + " in posizione " + pos);
 
             pos++;
             

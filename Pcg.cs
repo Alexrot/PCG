@@ -31,7 +31,9 @@ public class Pcg : MonoBehaviour
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(polygonNumber);
+
         //genero voronoi e modifico tramite lloyd
+
         Voronoi voronoi = new Voronoi(points, bounds, 4);
         puntiLloyd = voronoi.SitesIndexedByLocation;
         archiDelGrafo = voronoi.Edges;
@@ -44,7 +46,7 @@ public class Pcg : MonoBehaviour
         }
         Debug.Log(grafoFinale.nodes.Count);
         DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
-        /*
+        
         poligoni = new LoopFinder();
         poligoni.PolyTransform(poligono, exit);
         Node next = vtg.GetStartingPoint();
@@ -59,7 +61,7 @@ public class Pcg : MonoBehaviour
             Debug.Log(a.value+"dell'arco che va da "+a.a.position+" a "+a.b.position);
         }
 
-        */
+        
 
         //DisplayVoronoiDiagram(points, vtg.poligoni.arcs);//mio grafo
         //DisplayVoronoiDiagram(points, archiDelGrafo);//grafo voronoi
