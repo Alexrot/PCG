@@ -22,77 +22,87 @@ public class test : MonoBehaviour
 
     Triangulator tr;
 
-    public void PolyGen(List<Vector2> a, Transform p)
-    {
-        tr = new Triangulator(a.ToArray());
-        int[] indices = tr.Triangulate();
-        Vector3[] vertices = new Vector3[a.Count];
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices[i] = new Vector3(a[i].x, a[i].y, 0);
-        }
-        Mesh msh = new Mesh();
-        msh.vertices = vertices;
-        msh.triangles = indices;
-        msh.RecalculateNormals();
-        msh.RecalculateBounds();
-
-        if (IsOdd(nPoly))
-        {
-            poligon.GetComponent<Renderer>().material = mSea;
-        }
-        else
-        {
-            poligon.GetComponent<Renderer>().material = mPlain;
-        }
-
-
-        poligon = Instantiate(p, new Vector3(0, 0, 0), Quaternion.identity);
-        poligon.GetComponent<MeshFilter>().mesh = msh;
-        
-        //m_Material.color = new Color32(255, 165, 0,255);
-        poligon.name = nPoly.ToString();
-        nPoly++;
-
-
-        
-
-    }
-
-    public static bool IsOdd(int value)
-    {
-        return value % 2 != 0;
-    }
-
-    // Start is called before the first frame update
     void Start()
     {
+        int a = 10;
+        int b = 30;
+        int c = Math.Abs(a - b);
+        Debug.Log(c);
+        c = Math.Abs(b - a);
+        Debug.Log(c);
+    }
+
+
+
+
+
+
+
+        
+        public void PolyGen(List<Vector2> a, Transform p)
+        {
+            tr = new Triangulator(a.ToArray());
+            int[] indices = tr.Triangulate();
+            Vector3[] vertices = new Vector3[a.Count];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] = new Vector3(a[i].x, a[i].y, 0);
+            }
+            Mesh msh = new Mesh();
+            msh.vertices = vertices;
+            msh.triangles = indices;
+            msh.RecalculateNormals();
+            msh.RecalculateBounds();
+
+
+
+
+            poligon = Instantiate(p, new Vector3(0, 0, 0), Quaternion.identity);
+            poligon.GetComponent<MeshFilter>().mesh = msh;
+
+            //m_Material.color = new Color32(255, 165, 0,255);
+            poligon.name = nPoly.ToString();
+            nPoly++;
+
+
+
+
+        }
+    /*
+        public static bool IsOdd(int value)
+        {
+            return value % 2 != 0;
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            /*
+            Mesh mesh = new Mesh();
+            Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
+
+
+            Vector3[] vertices = new Vector3[4];
+
+            vertices[0] = new Vector3(0, 0);
+            vertices[1] = new Vector3(500, 0);
+            vertices[2] = new Vector3(0, 500);
+            vertices[3] = new Vector3(500, 500);
+           //vertices[4] = new Vector3(1, .8f);
+
+            mesh.vertices = vertices;
+
+            mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3,};
+            //GetComponent<MeshFilter>().mesh = mesh;
+            newPoly.GetComponent<MeshFilter>().mesh = mesh;
+
+            */
+
+
+
+
+
         /*
-        Mesh mesh = new Mesh();
-        Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
-
-      
-        Vector3[] vertices = new Vector3[4];
-
-        vertices[0] = new Vector3(0, 0);
-        vertices[1] = new Vector3(500, 0);
-        vertices[2] = new Vector3(0, 500);
-        vertices[3] = new Vector3(500, 500);
-       //vertices[4] = new Vector3(1, .8f);
-
-        mesh.vertices = vertices;
-
-        mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3,};
-        //GetComponent<MeshFilter>().mesh = mesh;
-        newPoly.GetComponent<MeshFilter>().mesh = mesh;
-
-        */
-
-
-        
-
-        
-
         Rect bounds = new Rect(0, 0, 512, 512);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(1000);
@@ -127,8 +137,7 @@ public class test : MonoBehaviour
 
 
 
-
-
+    */
 
 
 
@@ -136,6 +145,7 @@ public class test : MonoBehaviour
 
 
         /*
+        
 
 
         Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
@@ -185,7 +195,7 @@ public class test : MonoBehaviour
         {
             Debug.Log("funge "+a);
         }
-        */
+    /*    
     }
 
 
@@ -201,6 +211,7 @@ public class test : MonoBehaviour
 
         return points;
     }
+    */
 }
 
 
