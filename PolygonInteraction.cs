@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PolygonInteraction : MonoBehaviour
 {
-
+    public GodsEye god;
     public Zone data;
     public float umidità;
     public float altezza;
     public float calore;
+
 
 
     public void SetData(Zone a)
@@ -26,7 +27,8 @@ public class PolygonInteraction : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log(this.gameObject.name);
+        Debug.Log(data.centro);
+        god.UpdateInfoText(calore, altezza, umidità, data.typeBiome);
     }
 }
 

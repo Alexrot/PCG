@@ -18,7 +18,7 @@ public class Pcg : MonoBehaviour
 
     public int polygonNumber = 1000;
 
-
+    public int lloyd = 3;//3 e quella piu carina
 
     int nPoly = 0;
 
@@ -36,22 +36,32 @@ public class Pcg : MonoBehaviour
     public float lacunarity = 1.4f;
 
     List<Zone> mappa;
-    
+    List<Zone> humStart;
+
+
+    public bool isolaGrande;
+    public bool isolaMedia;
+    public bool isolaPiccola;
+    public bool penisola;
+    public bool side;
+
 
     Voronoi voronoi;
     public Transform poligono;
 
     private void Start()
     {
+        
         mappa = new List<Zone>();
+        humStart = new List<Zone>();
         //seed = Random.Range(0, maxCanvas);
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(polygonNumber);
-         voronoi = new Voronoi(points, bounds, 3);
+         voronoi = new Voronoi(points, bounds, lloyd);
         List<Node> poligonoUno = new List<Node>();
         float[,] noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas,seed,scale,octaveNumber,persistance, lacunarity, new Vector2(maxCanvas/2,maxCanvas/2));
-
+        noise = ApplyMask(noise); 
         Transform dev;
         Zone devz;
         foreach (Vector2 vor in voronoi.SiteCoords())
@@ -63,7 +73,7 @@ public class Pcg : MonoBehaviour
 
         }
         SetNeighbor();
-        UpdateMapUmidità();
+        DetectHum();
 
 
 
@@ -71,7 +81,102 @@ public class Pcg : MonoBehaviour
 
         ////////ogni stagione
         ///
+        GodsEye god = new GodsEye();
+        god.SetZone(mappa,humStart);
         UpdateData();
+    }
+
+
+    private float[,] ApplyMask(float[,]  mask)
+    {
+        
+        ///per la creazione di NoiseMask dobbiamo
+        ///creare degli algoritmi che andranno a sottrarre dalla noise che poi generiamo
+        ///partiamo dal preset isola
+        ///ISOLA
+        ///qui possiamo dare una grandezza per l'isola
+        ///in quanto ci basterà settare a -1 tutte le posizioni piu vicine ai bordi e poi diminuire a -0.8 -0.5 -0.3 
+        ///e poi +0.3 nella zona centrale
+        ///in questo modo possiamo decidere quanto sarà grande l'isola
+        ///PENISOLA
+        ///stesso concetto di isola ma un lato random non verra toccato
+        ///LATO DEL CONTINENTE
+        ///come penisola ma questa volta saranno 3 i lati da non toccare
+        ///ARCIPELAGO/////piu in la
+        ///fare un'altro voronoi 
+        ///prendi il 1/10 dei centri e i poligoni vicini
+        ///tutti gli altri poligoni saranno acqua
+        ///
+        if (isolaGrande||isolaMedia||isolaPiccola)
+        {
+
+            int iterazioni = 0;
+            if (isolaGrande)
+            {
+                iterazioni = 200;
+                
+            }else if (isolaMedia)
+            {
+                iterazioni = 400;
+
+            }else if (isolaPiccola)
+            {
+                iterazioni = 700;
+
+            }
+            int y = maxCanvas - iterazioni;
+            /*
+             *+++ 
+             *+++ 
+             *--- 
+             */
+            for (int i= 0; i < maxCanvas; i++)
+            {
+                for(int k = 0; k < iterazioni; k++)
+                {
+                        mask[i, k] = mask[i, k] - 0.44f;
+                }
+            }
+            /*
+             *--- 
+             *+++ 
+             *+++ 
+             */
+            for (int i = 0; i < maxCanvas; i++)
+            {
+                for (int k = y; k < maxCanvas; k++)
+                {
+                        mask[i, k] = mask[i, k] - 0.44f;
+
+                }
+            }
+            /*
+             *-++ 
+             *-++ 
+             *-++ 
+             */
+            for (int i = 0; i < iterazioni; i++)
+            {
+                for (int k = iterazioni; k < y; k++)
+                {
+                    mask[i, k] = mask[i, k] - 0.44f;
+                }
+            }
+            /*
+             *++- 
+             *++- 
+             *++- 
+             */
+            for (int i = y; i < maxCanvas; i++)
+            {
+                for (int k = iterazioni; k < y; k++)
+                {
+                    mask[i, k] = mask[i, k] - 0.44f;
+                }
+            }
+
+        }
+        return mask;
     }
 
     private void UpdateData()
@@ -99,49 +204,23 @@ public class Pcg : MonoBehaviour
         }
     }
 
-    public void UpdateMapUmidità()
+    public void DetectHum()
     {
-
+        
+        List<Zone> humNext = new List<Zone>();
         foreach (Zone a in mappa)
         {
             if (a.typeBiome == 1 || a.typeBiome == 0)
             {
                 a.SetUmidità(1);
-            }
-        }
-        foreach(Zone a in mappa)
-        {
-            if (a.umidità != 1)
+                humStart.Add(a);
+            } else if(a.typeBiome == 7)
             {
-                Zone closer=a;
-                int newHum = 0;
-                foreach(Zone b in a.vicini)
-                {
-                    if (newHum == 0)
-                    {
-                        closer = b;
-
-                        newHum = (int)Math.Pow(closer.umidità - 0.00001, Math.Abs((a.centro.x - b.centro.x) + (a.centro.y - b.centro.y)))*100;
-                        if (newHum < 0)
-                        {
-                            newHum = 0;
-                        }
-                    }
-                    else if ((float)Math.Pow(closer.umidità - 0.00001, Math.Abs((a.centro.x - b.centro.x) + (a.centro.y - b.centro.y))) > newHum)
-                    {
-                        closer = b;
-                        newHum = (int)Math.Pow(closer.umidità - 0.00001, Math.Abs((a.centro.x - b.centro.x) + (a.centro.y - b.centro.y))) * 100;
-                        if (newHum < 0)
-                        {
-                            newHum = 0;
-                        }
-                    }
-                }
-                a.umidità = newHum;
+                a.SetUmidità(0.8f);
+                humStart.Add(a);
             }
         }
-         
-         
+       
     }
 
 

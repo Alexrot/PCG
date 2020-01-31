@@ -14,6 +14,7 @@ public class Zone
     public float calore;
     public int typeBiome;
     public List<Zone> vicini;
+    public bool humCheck =false;
 
 
     public Zone(List<Vector2> poligono, Vector2 centro, Transform segmento, float noise)
@@ -43,9 +44,10 @@ public class Zone
         vicini.Add(vicino);
     }
 
-    public void SetUmidità(int umidità)
+    public void SetUmidità(float umidità)
     {
         this.umidità = umidità;
+        humCheck = true;
     }
 
     /// <summary>
