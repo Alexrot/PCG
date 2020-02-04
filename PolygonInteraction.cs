@@ -28,7 +28,7 @@ public class PolygonInteraction : MonoBehaviour
     private void OnMouseDown()
     {
         Debug.Log(data.centro);
-        god.UpdateInfoText(calore, altezza, umidità, data.typeBiome);
+        god.UpdateInfoText(data);
     }
 }
 

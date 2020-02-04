@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class GodsEye : MonoBehaviour
     public Text tipo;
     List<Zone> mappa;
     List<Zone> seaAndSnow;
+
+    
 
 
     // Start is called before the first frame update
@@ -27,21 +30,83 @@ public class GodsEye : MonoBehaviour
     {
         mappa = a;
         seaAndSnow = humStart;
-    }
-    
-    public void HumMapUpdate()
-    {
-
+        HumMapUpdate(humStart);
+        ErrorHumUp();
     }
 
-
-    public void UpdateInfoText(float c, float a, float u, int t)
+    private void ErrorHumUp()
     {
-        calore.text = c+"°";
+        float max = 0f;
+        foreach(Zone a in mappa)
+        {
+            if (a.umidità == 0)
+            {
+                foreach(Zone b in a.vicini)
+                {
+                    if (b.umidità - 0.3 > max)
+                    {
+                        max = b.umidità - 0.3f;
+                    }
+                }
+            }
+        }
+    }
+
+    public void HumMapUpdate(List<Zone> humZone)
+    {
+
+
+        List<Zone> nextToHum = new List<Zone>();
+        foreach(Zone a in humZone)
+        {
+            foreach(Zone b in a.vicini)
+            {
+                if (b.humCheck == false)
+                {
+                    if (b.calore == 0.4f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);
+                    }
+                    else if (b.calore == 0.7f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);
+           
+                    }
+                    else if (b.calore == 0 && b.umidità < a.umidità - 0.2f)
+                    {
+                        b.SetUmidità(a.umidità - 0.2f);
+                        
+                    }
+                    else if (b.calore == 1 && b.umidità < a.umidità - 0.3f)
+                    {
+                        b.SetUmidità(a.umidità - 0.3f);
+                        
+                    }else
+                    {
+                        b.SetUmidità(a.umidità - 0.3f);
+                    }
+                    b.humCheck = true;
+                    nextToHum.Add(b);
+                }
+                
+            }
+        }
+        if (nextToHum.Count != 0)
+        {
+            Debug.Log("iterazione hum"+ nextToHum.Count);
+            HumMapUpdate(nextToHum);
+        }
+
+    }
+
+
+    public void UpdateInfoText(Zone c)
+    {
+        calore.text = c.calore+"°";
         //Debug.Log(c);
-        altezza.text = a+"m";
-        umidità.text = u+"%";
-        switch (t)
+        altezza.text = (c.altezza/**1000*/)+"m";
+        umidità.text = (c.umidità/**100*/)+"%";
+        switch (c.typeBiome)
         {
             case 0:
                 tipo.text = "Mare profondo";

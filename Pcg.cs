@@ -54,7 +54,7 @@ public class Pcg : MonoBehaviour
         
         mappa = new List<Zone>();
         humStart = new List<Zone>();
-        //seed = Random.Range(0, maxCanvas);
+        seed = Random.Range(0, maxCanvas);
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(polygonNumber);
@@ -89,7 +89,7 @@ public class Pcg : MonoBehaviour
 
     private float[,] ApplyMask(float[,]  mask)
     {
-        
+
         ///per la creazione di NoiseMask dobbiamo
         ///creare degli algoritmi che andranno a sottrarre dalla noise che poi generiamo
         ///partiamo dal preset isola
@@ -107,73 +107,166 @@ public class Pcg : MonoBehaviour
         ///prendi il 1/10 dei centri e i poligoni vicini
         ///tutti gli altri poligoni saranno acqua
         ///
-        if (isolaGrande||isolaMedia||isolaPiccola)
+        
+        if (penisola||side)
+        {
+            
+            int lati = 1;
+            if (penisola)
+            {
+                lati = 3;
+            }
+            int j = Random.Range(1, 4);
+
+            
+            if (penisola)
+            {
+
+                /*
+             *+++ 
+             *+++ 
+             *--- 
+             */
+                if(j!=1)
+                    for (int i = 0; i < maxCanvas; i++)
+                    {
+                        for (int k = 0; k < iterazioni; k++)
+                        {
+                        mask[i, k] = mask[i, k] - 0.44f;
+                        }
+                    }
+                /*
+                   *--- 
+                   *+++ 
+                   *+++ 
+                   */
+                if (j != 1)
+                    for (int i = 0; i < maxCanvas; i++)
+                    {
+                        for (int k = y; k < maxCanvas; k++)
+                        {
+                        mask[i, k] = mask[i, k] - 0.44f;
+
+                        }
+                    }
+                /*
+                    *-++ 
+                    *-++ 
+                    *-++ 
+                    */
+                if (j != 1)
+                    for (int i = 0; i < iterazioni; i++)
+                    {
+                        for (int k = iterazioni; k < y; k++)
+                        {
+                        mask[i, k] = mask[i, k] - 0.44f;
+                        }
+                    }
+                /*
+                   *++- 
+                   *++- 
+                   *++- 
+                   */
+                if (j != 1)
+                    for (int i = y; i < maxCanvas; i++)
+                    {
+                        for (int k = iterazioni; k < y; k++)
+                        {
+                        mask[i, k] = mask[i, k] - 0.44f;
+                        }
+                    }
+            }
+            
+        }
+
+   }
+  
+
+
+
+       
+
+
+
+        if (isolaGrande || isolaMedia || isolaPiccola)
         {
 
             int iterazioni = 0;
             if (isolaGrande)
             {
-                iterazioni = 200;
-                
-            }else if (isolaMedia)
+                iterazioni = 800;
+
+            }
+            else if (isolaMedia)
+            {
+                iterazioni = 600;
+
+            }
+            else if (isolaPiccola)
             {
                 iterazioni = 400;
 
-            }else if (isolaPiccola)
+            }
+            for (int x=0;x<maxCanvas;x++)
             {
-                iterazioni = 700;
+                for (int y=0;y<maxCanvas ;y++)
+                {
+                    if(Math.Pow((x - 1000), 2)+ Math.Pow((y - 1000), 2)< Math.Pow(iterazioni+300, 2))
+                    {
+                        if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 250, 2))
+                        {
+                            if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+200, 2))
+                            {
+                                if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+150, 2))
+                                {
+                                    if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+100, 2))
+                                    {
+                                        if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+50, 2))
+                                        {
+                                            if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni, 2))
+                                            {
+                                                mask[x, y] = mask[x, y] + 0.04f;
+                                            }
+                                            else
+                                            {
+                                                mask[x, y] = mask[x, y] - (Random.Range(0, 0.05f));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mask[x, y] = mask[x, y] - (Random.Range(0.05f, 0.1f));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mask[x, y] = mask[x, y] - (Random.Range(0.1f, 0.15f));
+                                    }
+                                }
+                                else
+                                {
+                                    mask[x, y] = mask[x, y] - (Random.Range(0.15f, 0.2f));
+                                }
+                            }
+                            else
+                            {
+                                mask[x, y] = mask[x, y] - (Random.Range(0.2f,0.25f));
+                            }
+                        }
+                        else
+                        {
+                            mask[x, y] = mask[x, y] - (Random.Range(0.25f, 0.30f));
+                        }
+                    }
+                    else
+                    {
+                        mask[x, y] = mask[x, y] - 0.40f;
+                    }
+                }
+            }
 
-            }
-            int y = maxCanvas - iterazioni;
-            /*
-             *+++ 
-             *+++ 
-             *--- 
-             */
-            for (int i= 0; i < maxCanvas; i++)
-            {
-                for(int k = 0; k < iterazioni; k++)
-                {
-                        mask[i, k] = mask[i, k] - 0.44f;
-                }
-            }
-            /*
-             *--- 
-             *+++ 
-             *+++ 
-             */
-            for (int i = 0; i < maxCanvas; i++)
-            {
-                for (int k = y; k < maxCanvas; k++)
-                {
-                        mask[i, k] = mask[i, k] - 0.44f;
+            
 
-                }
-            }
-            /*
-             *-++ 
-             *-++ 
-             *-++ 
-             */
-            for (int i = 0; i < iterazioni; i++)
-            {
-                for (int k = iterazioni; k < y; k++)
-                {
-                    mask[i, k] = mask[i, k] - 0.44f;
-                }
-            }
-            /*
-             *++- 
-             *++- 
-             *++- 
-             */
-            for (int i = y; i < maxCanvas; i++)
-            {
-                for (int k = iterazioni; k < y; k++)
-                {
-                    mask[i, k] = mask[i, k] - 0.44f;
-                }
-            }
+            
 
         }
         return mask;
@@ -183,6 +276,7 @@ public class Pcg : MonoBehaviour
     {
         foreach (Zone a in mappa)
         {
+            a.DefineZone();
             a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
         }
     }
@@ -216,7 +310,7 @@ public class Pcg : MonoBehaviour
                 humStart.Add(a);
             } else if(a.typeBiome == 7)
             {
-                a.SetUmidità(0.8f);
+                a.SetUmidità(0.7f);
                 humStart.Add(a);
             }
         }
