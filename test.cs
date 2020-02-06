@@ -2,86 +2,123 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 
 using csDelaunay;
-using System;
+
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
 
 public class test : MonoBehaviour
 {
-    public MeshGenerator poliGen;
-      public Transform poligon;
+    int nPoly = 0;
     
+    public Transform poligon;
+    public Material mPlain;
+    public Material mSea;
+    public Material mMountain;
 
+    Triangulator tr;
 
-    // Start is called before the first frame update
     void Start()
     {
+        int a = 10;
+        int b = 30;
+        int c = Math.Abs(a - b);
+        Debug.Log(c);
+        c = Math.Abs(b - a);
+        Debug.Log(c);
+    }
+
+
+
+
+
+
+
         
-        Mesh mesh = new Mesh();
-        Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
-
-      
-        Vector3[] vertices = new Vector3[4];
-
-        vertices[0] = new Vector3(0, 0);
-        vertices[1] = new Vector3(500, 0);
-        vertices[2] = new Vector3(0, 500);
-        vertices[3] = new Vector3(500, 500);
-       //vertices[4] = new Vector3(1, .8f);
-
-        mesh.vertices = vertices;
-
-        mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3,};
-        //GetComponent<MeshFilter>().mesh = mesh;
-        newPoly.GetComponent<MeshFilter>().mesh = mesh;
+        public void PolyGen(List<Vector2> a, Transform p)
+        {
+            tr = new Triangulator(a.ToArray());
+            int[] indices = tr.Triangulate();
+            Vector3[] vertices = new Vector3[a.Count];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] = new Vector3(a[i].x, a[i].y, 0);
+            }
+            Mesh msh = new Mesh();
+            msh.vertices = vertices;
+            msh.triangles = indices;
+            msh.RecalculateNormals();
+            msh.RecalculateBounds();
 
 
 
 
+            poligon = Instantiate(p, new Vector3(0, 0, 0), Quaternion.identity);
+            poligon.GetComponent<MeshFilter>().mesh = msh;
+
+            //m_Material.color = new Color32(255, 165, 0,255);
+            poligon.name = nPoly.ToString();
+            nPoly++;
 
 
 
 
+        }
+    /*
+        public static bool IsOdd(int value)
+        {
+            return value % 2 != 0;
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            /*
+            Mesh mesh = new Mesh();
+            Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
 
 
+            Vector3[] vertices = new Vector3[4];
 
+            vertices[0] = new Vector3(0, 0);
+            vertices[1] = new Vector3(500, 0);
+            vertices[2] = new Vector3(0, 500);
+            vertices[3] = new Vector3(500, 500);
+           //vertices[4] = new Vector3(1, .8f);
 
+            mesh.vertices = vertices;
 
+            mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3,};
+            //GetComponent<MeshFilter>().mesh = mesh;
+            newPoly.GetComponent<MeshFilter>().mesh = mesh;
 
-
-
-
-
-
-
-
-
-
-
-
+            */
 
 
 
 
 
         /*
-        poliGen = new MeshGenerator();
         Rect bounds = new Rect(0, 0, 512, 512);
         //punti randomici NON QUELLI DA UTILIZZARE
-        List<Vector2> points = CreateRandomPoint(10);
-        Voronoi voronoi = new Voronoi(points, bounds, 4);
+        List<Vector2> points = CreateRandomPoint(1000);
+        Voronoi voronoi = new Voronoi(points, bounds, 2);
         List<Node> poligonoUno = new List<Node>();
         
+
+
+
+
+
+
         List<List<Vector2>> b = voronoi.Regions();
         foreach(List<Vector2> a in b)
         {
-            poliGen.PolyGen(a, poligon);
+            PolyGen(a, poligon);
         }
         
         foreach (Vector2 a in voronoi.Region(points[0]))
@@ -96,12 +133,11 @@ public class test : MonoBehaviour
         
         //poliGen.PolyGen(a, poligon);
 
-        */
+        
 
 
 
-
-
+    */
 
 
 
@@ -109,6 +145,7 @@ public class test : MonoBehaviour
 
 
         /*
+        
 
 
         Transform newPoly = Instantiate(poligon, new Vector3(0, 0, 0), Quaternion.identity);
@@ -158,7 +195,7 @@ public class test : MonoBehaviour
         {
             Debug.Log("funge "+a);
         }
-        */
+    /*    
     }
 
 
@@ -174,99 +211,7 @@ public class test : MonoBehaviour
 
         return points;
     }
-}
-
-
-/*
-
-
-
-///passo 2*
-///controlla tra i suoi nodi adiacenti quali sono presenti nei livelli superiori nella matice
-private void BackTrack(List<Node> a)
-{
-    /*
-    List<Node> prossimiDaControllare = new List<Node>();
-    List<Node> nodiVicini = new List<Node>();
-    foreach (Node k in a)
-    {
-        nodiVicini = k.NearNodes(k.ConnectedArc());
-    }
-
-    //SE IN UN LIVELLO SUPERIORE SI RITROVA L'ARCO STESSO (PROBABILE CHE SUCCEDA COL DUPLICATO APPENA SCELTO)
-    //CONTROLLA ANCHE QUELLO SUPERIORE DI LIVELLO CON QUELLO STESSO NODO
-    if (nodiVicini.Contains(loopNode[0]))
-    {
-        prossimiDaControllare.Add(loopNode[0]);
-    }
     */
-//controlla per errore di indici
-//debug.log
-/*
- * 
- * NON FUNZIONA
- * 
- * 
- * 
- */
-/*
-
-Debug.Log(matrixLayerDev);
-if (matrixLayer == matrixLayerDev)
-   foreach (Node nodiLivello in matrice[matrixLayerDev - 1])
-   {
-       if (nodiVicini.Contains(nodiLivello))
-       {
-           if (!loopNode.Contains(nodiLivello))
-           {
-
-               loopNode.Add(nodiLivello);
-               prossimiDaControllare.Add(nodiLivello);
-           }
-
-       }
-   }
-foreach (Node nodiLivello in matrice[matrixLayerDev - 2])
-{
-   if (nodiVicini.Contains(nodiLivello))
-   {
-       if (!loopNode.Contains(nodiLivello))
-       {
-
-           loopNode.Add(nodiLivello);
-           prossimiDaControllare.Add(nodiLivello);
-       }
-
-   }
 }
 
 
-matrixLayerDev--;
-///passo 3*
-///ripeti il passo 2 fino a che non sei al layer 0 o non hai trovato un'altro duplicato(2 volte lo stesso nodo)
-///questa volta e piu facile dato che troveremo al massimo un nodo per direzione e abbiamo 2 direzioni
-////errore!!!!!!!!!!CONTINUO SOLO SE NON HO ANCORA TROVATO UN DUPLICATO //
-////e ancora possibilie trovare errori ....forse
-///
-Debug.Log(prossimiDaControllare.Count + " sono i prossimi");
-
-if (prossimiDaControllare.Count > 1)
-{
-   //e uno solo se siamo in cima alla matrice
-   BackTrack(prossimiDaControllare);
-}
-else if (prossimiDaControllare.Count == 0 && prossimiDaControllare[0] == loopNode[0])
-{
-   BackTrack(prossimiDaControllare);
-}
-
-Debug.Log("NUMERO nodi ciclo :" + loopNode.Count);
-foreach (Node ga in loopNode)
-{
-   Debug.Log("nodi ciclo :" + ga.position);
-}
-//dalla penultima riga della matrice controlla i nodi e prendi quelli ai livelli più alti
-//foreach ()
-
-}
-*/
