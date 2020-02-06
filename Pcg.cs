@@ -16,52 +16,68 @@ public class Pcg : MonoBehaviour
     public Text tBase;
     int maxCanvas= 2000; //base per poi non dover modificare anche la temperatura
 
-    public int polygonNumber = 1000;
-
-    public int lloyd = 3;//3 e quella piu carina
-
-    int nPoly = 0;
+    int nPoly;
 
     public Transform poligon;
-    /*
-    public Material mPlain;
-    public Material mSea;
-    public Material mMountain;
-    */
+
     Triangulator tr;
     public int seed;
-    public float scale = 0.3f;
-    public int octaveNumber = 8;
-    public float persistance = 2f;
-    public float lacunarity = 1.4f;
+    private float scale = 400;
+    private int octaveNumber = 4;
+    private float persistance = 0.15f;
+    private float lacunarity = 1f;
 
     List<Zone> mappa;
     List<Zone> humStart;
 
 
-    public bool isolaGrande;
-    public bool isolaMedia;
-    public bool isolaPiccola;
-    public bool penisola;
-    public bool side;
+
+    public bool useSeed;
 
 
+    public GodsEye god;
     Voronoi voronoi;
     public Transform poligono;
 
-    private void Start()
+    MapData data;
+
+
+
+    public void Generate(GodsEye a, Transform p, MapData data)
     {
-        
+        this.data = data;
+        poligon = p;
+        nPoly = 0;
+        CreateNew();
+        ////////ogni stagione
+        ///
+        god = a;
+        god.SetZone(mappa, humStart);
+        god.UpdateData();
+    }
+
+
+
+    public void CreateNew()
+    {
         mappa = new List<Zone>();
         humStart = new List<Zone>();
-        seed = Random.Range(0, maxCanvas);
+        if (!data.useSeed)
+        {
+            seed = Random.Range(0, maxCanvas);
+        }
+        else
+        {
+            seed = data.seed;
+        }
+            
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
-        List<Vector2> points = CreateRandomPoint(polygonNumber);
-         voronoi = new Voronoi(points, bounds, lloyd);
+        List<Vector2> points = CreateRandomPoint(data.polygonNumber);
+        voronoi = new Voronoi(points, bounds, 3);
         List<Node> poligonoUno = new List<Node>();
-        float[,] noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas,seed,scale,octaveNumber,persistance, lacunarity, new Vector2(maxCanvas/2,maxCanvas/2));
-        noise = ApplyMask(noise); 
+        float[,] noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas, seed, scale, octaveNumber, persistance, lacunarity, new Vector2(maxCanvas / 2, maxCanvas / 2));
+        noise = ApplyMask(noise);
         Transform dev;
         Zone devz;
         foreach (Vector2 vor in voronoi.SiteCoords())
@@ -74,16 +90,6 @@ public class Pcg : MonoBehaviour
         }
         SetNeighbor();
         DetectHum();
-
-
-
-
-
-        ////////ogni stagione
-        ///
-        GodsEye god = new GodsEye();
-        god.SetZone(mappa,humStart);
-        UpdateData();
     }
 
 
@@ -107,8 +113,112 @@ public class Pcg : MonoBehaviour
         ///prendi il 1/10 dei centri e i poligoni vicini
         ///tutti gli altri poligoni saranno acqua
         ///
-        
-       
+        ///penisola non ha ragione di esistere nella configuarione attuale 
+        /*
+        if (penisola||side)
+        {
+            
+            int lati = 1;
+            if (penisola)
+            {
+                lati = 3;
+            }
+            int j = Random.Range(1, 4);
+            int dimP = 200;
+            int dimM = 400;
+            int dimG = 600;
+
+            if (penisola)
+            {
+
+                
+             //+++ 
+             //+++ 
+            //--- 
+             
+                if(j!=1)
+                    for (int x = 0; x < maxCanvas; x++)
+                    {
+                        for (int y = 0; y < dimP; y++)
+                        {
+                        mask[x, y] = mask[x, y] - 0.44f;
+                        }
+                        for (int y = 0; y < dimM && y>= dimP; y++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.30f;
+                        }
+                        for (int y = 0; y < dimG && y >= dimM; y++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.12f;
+                        }
+                    }
+                
+                   //*--- 
+                   //*+++ 
+                   //*+++ 
+                   
+                if (j != 2)
+                    for (int x = 0; x < maxCanvas; x++)
+                    {
+                        for (int y = maxCanvas-dimP; y < dimP; y++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.12f;
+                        }
+                        for (int y = maxCanvas - dimM; y < dimM && y >= dimP; y++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.30f;
+                        }
+                        for (int y = maxCanvas - dimG; y < dimG && y >= dimM; y++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.44f;
+                        }
+                    }
+                
+                    //*-++ 
+                    //*-++ 
+                    //*-++ 
+                    
+                if (j != 3)
+                    for (int y = 0; y < maxCanvas; y++)
+                    {
+                        for (int x = 0; x < dimP; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.44f;
+                        }
+                        for (int x = 0; x < dimM && x >= dimP; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.30f;
+                        }
+                        for (int x = 0; x < dimG && x >= dimM; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.12f;
+                        }
+                    }
+                
+                   //*++- 
+                   //*++- 
+                   //++- 
+                   
+                if (j != 4)
+                    for (int y = 0; y < maxCanvas; y++)
+                    {
+                        for (int x = maxCanvas -dimP; x < maxCanvas; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.44f;
+                        }
+                        for (int x = maxCanvas - dimM; x < maxCanvas && x >= maxCanvas ; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.30f;
+                        }
+                        for (int x = maxCanvas - dimG; x < maxCanvas && x >= maxCanvas ; x++)
+                        {
+                            mask[x, y] = mask[x, y] - 0.12f;
+                        }
+                    }
+            }
+            
+        }
+  */
 
 
 
@@ -116,21 +226,21 @@ public class Pcg : MonoBehaviour
 
 
 
-        if (isolaGrande || isolaMedia || isolaPiccola)
+        if (data.isolaGrande || data.isolaMedia || data.isolaPiccola)
         {
 
             int iterazioni = 0;
-            if (isolaGrande)
+            if (data.isolaGrande)
             {
                 iterazioni = 800;
 
             }
-            else if (isolaMedia)
+            else if (data.isolaMedia)
             {
                 iterazioni = 600;
 
             }
-            else if (isolaPiccola)
+            else if (data.isolaPiccola)
             {
                 iterazioni = 400;
 
@@ -153,7 +263,7 @@ public class Pcg : MonoBehaviour
                                         {
                                             if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni, 2))
                                             {
-                                                mask[x, y] = mask[x, y] + 0.04f;
+                                                mask[x, y] = mask[x, y] + 0.08f;
                                             }
                                             else
                                             {
@@ -200,14 +310,6 @@ public class Pcg : MonoBehaviour
         return mask;
     }
 
-    private void UpdateData()
-    {
-        foreach (Zone a in mappa)
-        {
-            a.DefineZone();
-            a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
-        }
-    }
 
     public void SetNeighbor()
     {
@@ -232,11 +334,11 @@ public class Pcg : MonoBehaviour
         List<Zone> humNext = new List<Zone>();
         foreach (Zone a in mappa)
         {
-            if (a.typeBiome == 1 || a.typeBiome == 0)
+            if (a.typeBiome == 1 || a.typeBiome == 0 || a.typeBiome == 2 || a.typeBiome == 3)
             {
                 a.SetUmidità(1);
                 humStart.Add(a);
-            } else if(a.typeBiome == 7)
+            } else if(a.typeBiome == 12 || a.typeBiome == 11)
             {
                 a.SetUmidità(0.7f);
                 humStart.Add(a);
@@ -244,9 +346,6 @@ public class Pcg : MonoBehaviour
         }
        
     }
-
-
-
 
     private List<Vector2> CreateRandomPoint(int polygonNumber)
     {
@@ -286,7 +385,4 @@ public class Pcg : MonoBehaviour
 
 
     }
-
-
-
 }
