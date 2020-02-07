@@ -14,7 +14,7 @@ public class Pcg : MonoBehaviour
 {
     
     public Text tBase;
-    int maxCanvas= 2000; //base per poi non dover modificare anche la temperatura
+    int maxCanvas; 
 
     int nPoly;
 
@@ -22,10 +22,10 @@ public class Pcg : MonoBehaviour
 
     Triangulator tr;
     public int seed;
-    private float scale = 400;
-    private int octaveNumber = 4;
-    private float persistance = 0.15f;
-    private float lacunarity = 1f;
+     float scale;
+     int octaveNumber;
+     float persistance;
+     float lacunarity;
 
     List<Zone> mappa;
     List<Zone> humStart;
@@ -45,6 +45,11 @@ public class Pcg : MonoBehaviour
 
     public void Generate(GodsEye a, Transform p, MapData data)
     {
+        maxCanvas = 2000;//base per poi non dover modificare anche la temperatura
+        scale = 400;
+        octaveNumber = 4;
+        persistance = 0.15f;
+        lacunarity = 1f;
         this.data = data;
         poligon = p;
         nPoly = 0;

@@ -24,7 +24,7 @@ public class Zone
         this.poligono = poligono;
         this.centro = centro;
         poly = segmento;
-        CalcolateHeat();
+        CalcolateHeatStart();
         DefineZoneByHum();
         polyGO =poly.gameObject;
 
@@ -50,12 +50,16 @@ public class Zone
         {
             umidità = 0.01f;
         }
-        else
+        else if (umidità>1)
+        {
+            umidità = 1f;
+        }else
         {
             this.umidità = umidità;
         }
         
         humCheck = true;
+
     }
 
     /// <summary>
@@ -224,7 +228,7 @@ public class Zone
         /// <summary>
         /// Calcola la temperatura del poligono in base alla sua posizione nella mappa
         /// </summary>
-        void CalcolateHeat()
+    void CalcolateHeatStart()
     {
         float pos =centro.y;
         if (pos <= 1200 && pos >= 800)
@@ -245,6 +249,11 @@ public class Zone
         }
     }
 
+    public void ChangeHeat(float change)
+    {
+        calore =calore+ change;
+
+    }
 
 
 }

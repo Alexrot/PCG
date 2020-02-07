@@ -27,7 +27,7 @@ public class PolygonInteraction : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log(data.centro);
+        //Debug.Log(data.centro);
         god.UpdateInfoText(data);
     }
 }
