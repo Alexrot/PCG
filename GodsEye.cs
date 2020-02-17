@@ -12,10 +12,16 @@ public class GodsEye : MonoBehaviour
     public Text umidità;
     public Text tipo;
     public Text seasonText;
+    public GameObject showAtStart;
+    public GameObject hideAtStart;
+    public Text seedShow;
+
     List<Zone> mappa;
     List<Zone> seaAndSnow;
     public Button newMap;
     public Button nextSeason;
+    public Button btnStart;
+    public Dropdown styleMap;
     MapData data;
     Pcg mondo;
 
@@ -26,19 +32,23 @@ public class GodsEye : MonoBehaviour
     public int polygonNumber;
     public bool useSeed;
     public int seed;
-    public bool isolaGrande;
-    public bool isolaMedia;
-    public bool isolaPiccola;
+     bool isolaGrande;
+     bool isolaMedia;
+     bool isolaPiccola;
 
 
     // Start is called before the first frame update
 
      void Start()
     {
+        showAtStart.gameObject.SetActive(false);
+
+
         data = new MapData();
         mappa = new List<Zone>();
         seaAndSnow = new List<Zone>();
         newMap.onClick.AddListener(NewMap);
+        btnStart.onClick.AddListener(NewMap);
         nextSeason.onClick.AddListener(NextSeason);
         mondo = new Pcg();
         time = new Age();
@@ -50,15 +60,21 @@ public class GodsEye : MonoBehaviour
     
     public void NewMap()
     {
+        //show text and button
+        showAtStart.gameObject.SetActive(true);
+        hideAtStart.gameObject.SetActive(false);
         
+
+        
+
         SendData();
         foreach(Zone a in mappa)
         {
             Destroy(a.polyGO);
         }
         mondo.Generate(this, poligono, data);
-        
-        
+        seedShow.text = "" + data.seed;
+
     }
 
     void NextSeason()
@@ -73,7 +89,8 @@ public class GodsEye : MonoBehaviour
     private void SendData()
     {
         data.SetNoiseData(useSeed, seed);
-        data.SetVoronoiData(polygonNumber, isolaGrande, isolaMedia, isolaPiccola);
+
+        data.SetVoronoiData(polygonNumber, styleMap.value);
     }
 
     public void UpdateData()

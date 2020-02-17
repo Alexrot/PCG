@@ -138,7 +138,7 @@ public class Zone
                 poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.white, 0.31f);
                 typeBiome = 1;
             }
-            if (calore == 0)
+            if (calore <= 0.20)
             {
                 if (altezza <0.10)
                 {
@@ -221,7 +221,7 @@ public class Zone
         }
         if (altezza > 0.45&&calore==0)
         {
-            poly.GetComponent<Renderer>().material.color = Color.Lerp(poly.GetComponent<Renderer>().material.color, Color.Lerp(Color.blue, Color.white  , 0.45f), 0.55f);
+            poly.GetComponent<Renderer>().material.color = Color.Lerp(poly.GetComponent<Renderer>().material.color, Color.Lerp(Color.blue, Color.white  , 0.65f), 0.65f);
         }
     }
 
@@ -231,6 +231,8 @@ public class Zone
     void CalcolateHeatStart()
     {
         float pos =centro.y;
+        calore=Math.Abs(1-(Math.Abs(pos - 1000)/1000));
+        /*
         if (pos <= 1200 && pos >= 800)
         {
             calore = 1;//caldo
@@ -247,11 +249,27 @@ public class Zone
         {
             calore = 0.7f;//temperato caldo
         }
+        */
     }
 
     public void ChangeHeat(float change)
     {
-        calore =calore+ change;
+        if(typeBiome==2|| typeBiome == 3)
+        {
+            change =change / 2;
+        }
+        if(calore + change > 1)
+        {
+            calore = 1;
+        }else if(calore + change < 0)
+        {
+            calore = 0;
+        }
+        else
+        {
+            calore = calore + change;
+        }
+        
 
     }
 

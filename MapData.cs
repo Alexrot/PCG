@@ -7,9 +7,8 @@ public class MapData
     public int polygonNumber;
     public bool useSeed;
     public int seed;
-    public bool isolaGrande;
-    public bool isolaMedia;
-    public bool isolaPiccola;
+
+    public int isola;
 
     public void SetNoiseData(bool useSeed, int seed)
     {
@@ -17,12 +16,11 @@ public class MapData
         this.seed = seed;
     }
 
-    public void SetVoronoiData( int polygonNumber, bool isolaGrande, bool isolaMedia, bool isolaPiccola)
+    public void SetVoronoiData( int polygonNumber, int isola)
     {
         
         this.polygonNumber = polygonNumber;
-        this.isolaGrande = isolaGrande;
-        this.isolaMedia = isolaMedia;
-        this.isolaPiccola = isolaPiccola;
+        this.isola = isola;
+
     }
 }

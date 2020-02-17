@@ -70,6 +70,7 @@ public class Pcg : MonoBehaviour
         if (!data.useSeed)
         {
             seed = Random.Range(0, maxCanvas);
+            data.seed = seed;
         }
         else
         {
@@ -231,21 +232,21 @@ public class Pcg : MonoBehaviour
 
 
 
-        if (data.isolaGrande || data.isolaMedia || data.isolaPiccola)
+        if (data.isola<3)
         {
 
             int iterazioni = 0;
-            if (data.isolaGrande)
+            if (data.isola==0)
             {
                 iterazioni = 800;
 
             }
-            else if (data.isolaMedia)
+            else if (data.isola == 1)
             {
                 iterazioni = 600;
 
             }
-            else if (data.isolaPiccola)
+            else if (data.isola == 2)
             {
                 iterazioni = 400;
 

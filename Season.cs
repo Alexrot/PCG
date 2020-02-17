@@ -6,10 +6,10 @@ public class Season : MonoBehaviour
 {
     int day = 0;
 
-    float summer = 0.5f;
-    float spring = 0.2f;
-    float winter = -0.5f;
-    float fall = -0.2f;
+    float summer = 0.25f;
+    float spring = 0.1f;
+    float winter = -0.25f;
+    float fall = -0.1f;
 
     /// <summary>
     /// ogni stagione avrà 4 "giorni".
@@ -25,12 +25,12 @@ public class Season : MonoBehaviour
             day++;
             if (day == 2)
             {
-                return summer / 2;
+                return summer / 2+ (Random.Range(-0.1f, 0.1f));
             }
             if (day == 4)
             {
                 day = 0;
-                return summer / 2;
+                return summer / 2 + (Random.Range(-0.1f, 0.1f));
             }
 
         }
@@ -51,12 +51,12 @@ public class Season : MonoBehaviour
             day++;
             if (day == 2)
             {
-                return spring / 2;
+                return spring / 2 + (Random.Range(-0.1f, 0.1f));
             }
             if (day == 4)
             {
                 day = 0;
-                return spring / 2;
+                return spring / 2 + (Random.Range(-0.1f, 0.1f));
             }
 
         }
@@ -77,12 +77,12 @@ public class Season : MonoBehaviour
             day++;
             if (day == 2)
             {
-                return winter / 2;
+                return winter / 2 + (Random.Range(-0.1f, 0.1f));
             }
             if (day == 4)
             {
                 day = 0;
-                return winter / 2;
+                return winter / 2 + (Random.Range(-0.1f, 0.1f));
             }
 
         }
@@ -104,12 +104,12 @@ public class Season : MonoBehaviour
             day++;
             if (day == 2)
             {
-                return fall / 2;
+                return fall / 2 + (Random.Range(-0.1f, 0.1f));
             }
             if (day == 4)
             {
                 day = 0;
-                return fall / 2;
+                return fall / 2 + (Random.Range(-0.1f, 0.1f));
             }
             
         }
