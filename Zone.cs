@@ -26,6 +26,7 @@ public class Zone
         poly = segmento;
         CalcolateHeatStart();
         DefineZoneByHum();
+       
         polyGO =poly.gameObject;
 
         
@@ -65,7 +66,7 @@ public class Zone
     /// <summary>
     /// Definisce il poligono in base all'altezza
     /// </summary>
-    private void DefineZoneType()
+    public void DefineZoneType()
     {
         if (altezza <= 0.25)
         {
@@ -73,19 +74,19 @@ public class Zone
             typeBiome = 0;
             poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.gray, 0.41f);
         }
-        else if (altezza > 0.25 && altezza <= 0.4)
+        else if (altezza > 0.25 && altezza <= 0.45)
         {
             //type 1 Ocean
             typeBiome = 1;
             poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.white, 0.31f);
         }
-        else if (altezza > 0.4 && altezza <= 0.45)
+        else if (altezza > 0.45 && altezza <= 0.50)
         {
             //type 2 Coast
             typeBiome = 2;
             poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.yellow, Color.white, 0.41f);
         }
-        else if (altezza > 0.45 && altezza <= 0.55)
+        else if (altezza > 0.50 && altezza <= 0.55)
         {
             //type 3 plain
             typeBiome = 3;
@@ -116,6 +117,33 @@ public class Zone
             poly.GetComponent<Renderer>().material.color = Color.white;
         }
     }
+
+
+    /// <summary>
+    /// Definisce il poligono in base all'umidità
+    /// </summary>
+    public void DefineHumZone()
+    {
+        poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.Lerp(Color.white, Color.blue, 0.01f), Color.blue, umidità);
+    }
+
+    /// <summary>
+    /// Definisce il poligono in base alla noise
+    /// </summary>
+    public void DefineNoiseZone()
+    {
+        poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.black, altezza);
+    }
+
+    /// <summary>
+    /// Definisce il poligono in base al calore
+    /// </summary>
+    public void DefineHeatZone()
+    {
+        poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.red, calore);
+    }
+
+
 
     /// <summary>
     /// Cambia il tipo della zona in base a temperatura e umidità

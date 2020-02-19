@@ -98,6 +98,10 @@ public class GodsEye : MonoBehaviour
         foreach (Zone a in mappa)
         {
             a.DefineZoneByHum();
+            //a.DefineZoneType();
+            //a.DefineHumZone();
+            //a.DefineNoiseZone();
+            a.DefineHeatZone();
             a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
         }
     }
