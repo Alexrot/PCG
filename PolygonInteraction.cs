@@ -9,6 +9,8 @@ public class PolygonInteraction : MonoBehaviour
     public float umidità;
     public float altezza;
     public float calore;
+    public int food;
+    public int maxFood;
 
 
 
@@ -22,6 +24,8 @@ public class PolygonInteraction : MonoBehaviour
         umidità = data.umidità;
         altezza = data.altezza;
         calore = data.calore;
+        food = data.GetFood();
+        maxFood = data.risorse.limite;
     }
 
 

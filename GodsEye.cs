@@ -100,8 +100,9 @@ public class GodsEye : MonoBehaviour
             a.DefineZoneByHum();
             //a.DefineZoneType();
             //a.DefineHumZone();
-            //a.DefineNoiseZone();
-            a.DefineHeatZone();
+            // a.DefineNoiseZone();
+            //a.DefineHeatZone();
+            a.GeneraFlora();
             a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
         }
     }
@@ -213,6 +214,24 @@ public class GodsEye : MonoBehaviour
             HumMapUpdate(nextToHum);
         }
     }
+
+
+    /// <summary>
+    /// Da effettuare 4 volta a stagione
+    /// </summary>
+    /// <param name="season">indica la stagione in cui generare la risorsa</param>
+    public void PlantMapEvo(int season)
+    {
+        foreach (Zone a in mappa)
+        {
+            if (a.food || a.seasonFood == season)
+            {
+                a.SpawnFood();
+            }
+        }
+    }
+
+
 
     /// <summary>
     /// Da effettuare 2 volta a stagione

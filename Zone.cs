@@ -16,6 +16,10 @@ public class Zone
     public List<Zone> vicini;
     public bool humCheck =false;
 
+    public Flora risorse;
+    public bool food = false;
+    public int seasonFood;
+
 
     public Zone(List<Vector2> poligono, Vector2 centro, Transform segmento, float noise)
     {
@@ -29,12 +33,68 @@ public class Zone
        
         polyGO =poly.gameObject;
 
-        
+        risorse = new Flora();
         
     }
 
+    public void SpawnFood()
+    {
+        risorse.Spaw();
+    }
 
+    public int GetFood()
+    {
+        return risorse.risorse;
+    }
 
+    public void GeneraFlora()
+    {
+        
+        if (altezza < 0.85 && altezza > 0.45)
+        {
+            
+            if (umidità>0.32&& umidità <= 0.64)
+            {
+                
+                if (UnityEngine.Random.Range(1, 4) > 2)
+                {
+                    
+                    Plant(1);
+                }
+            }
+            if (umidità > 0.64 && umidità <= 0.8)
+            {
+                if (UnityEngine.Random.Range(1, 4) > 1)
+                {
+                    
+                    Plant(2);
+                }
+            }
+            if (umidità > 0.8 )
+            {
+
+                Plant(3);
+            }           
+        }
+    }
+
+    private void Plant(int riproduzione)
+    {
+        risorse.GeneratePlants(riproduzione, CalcolateSize());
+        food = true;
+        seasonFood= risorse.season;
+    }
+
+    private int CalcolateSize()
+    {
+        float size=0;
+        foreach(Vector2 a in poligono)
+        {
+            size +=(Math.Abs(a.x - centro.x) + Math.Abs(a.y - centro.y));
+        }
+        size = size * 100;
+        return (int)size;
+    }
 
     /// <summary>
     /// Inserisco nel poligono le informazioni sui poligoni vicini tramite i loro punti di voronoi

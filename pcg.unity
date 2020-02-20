@@ -1967,7 +1967,7 @@ MonoBehaviour:
   autoSkip: 0
   polygonNumber: 2000
   useSeed: 1
-  seed: 1940
+  seed: 397
 --- !u!1 &943773991
 GameObject:
   m_ObjectHideFlags: 0

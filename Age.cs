@@ -41,48 +41,52 @@ public class Age : MonoBehaviour
             case 1:
                 for (int i = 0; i < 4; i++)
                 {
-                    
+                    god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
                         god.HeatUpdate(time.Spring());
                         Debug.Log("iterazione hum");
                         god.HumMapEvo();
+                        
                     }
                 }
                 break;
             case 2:
                 for (int i = 0; i < 4; i++)
                 {
-                    
+                    god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
                         god.HeatUpdate(time.Summer());
                         Debug.Log("iterazione hum");
                         god.HumMapEvo();
+                        
                     }
                 }
                 break;
             case 3:
                 for (int i = 0; i < 4; i++)
                 {
-                    
+                    god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
                         god.HeatUpdate(time.Fall());
                         Debug.Log("iterazione hum");
                         god.HumMapEvo();
+                        
                     }
                 }
                 break;
             case 4:
                 for (int i = 0; i < 4; i++)
                 {
-                    
+                    god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
                         god.HeatUpdate(time.Winter());
                         Debug.Log("iterazione hum");
                         god.HumMapEvo();
+                        
                     }
                 }
                 break;
