@@ -22,6 +22,11 @@ public class GodsEye : MonoBehaviour
     public Button nextSeason;
     public Button btnStart;
     public Dropdown styleMap;
+    public Dropdown styleMapStart;
+    public Toggle seedMap;
+    public Toggle seedMapStart;
+    public Text seedInput;
+    public Text seedInputStart;
     MapData data;
     Pcg mondo;
 
@@ -53,10 +58,16 @@ public class GodsEye : MonoBehaviour
         mondo = new Pcg();
         time = new Age();
         time.SetGod(this);
-
-
-
+        seedMap.onValueChanged.AddListener(delegate {
+            ToggleSeedText(seedMap);
+        });
+        seedMapStart.onValueChanged.AddListener(delegate {
+            ToggleSeedTextStart(seedMapStart);
+        });
+        
     }
+
+    
     
     public void NewMap()
     {
@@ -68,7 +79,9 @@ public class GodsEye : MonoBehaviour
         
 
         SendData();
-        foreach(Zone a in mappa)
+        styleMapStart.gameObject.SetActive(false);
+        seedMapStart.gameObject.SetActive(false);
+        foreach (Zone a in mappa)
         {
             Destroy(a.polyGO);
         }
@@ -88,9 +101,41 @@ public class GodsEye : MonoBehaviour
 
     private void SendData()
     {
-        data.SetNoiseData(useSeed, seed);
+        if (seedMapStart.isOn)
+        {
+            data.SetNoiseData(useSeed, int.Parse(seedInputStart.text));
+        }
+        else if (seedMap.isOn)
+        {
+            data.SetNoiseData(useSeed, int.Parse(seedInput.text));
+        }
+        else
+        {
+            data.SetNoiseData(useSeed, seed);
+        }
 
-        data.SetVoronoiData(polygonNumber, styleMap.value);
+        if (styleMapStart.IsActive())
+        {
+            data.SetVoronoiData(polygonNumber, styleMapStart.value);
+        }
+        else
+        {
+            data.SetVoronoiData(polygonNumber, styleMap.value);
+        }
+        
+    }
+
+    void ToggleSeedText(Toggle t)
+    {
+        if (seedMap.isOn) seedInput.gameObject.SetActive(true); else seedInput.gameObject.SetActive(false);
+        if (seedMap.isOn) useSeed = true; else useSeed = false;
+
+    }
+
+    void ToggleSeedTextStart(Toggle t)
+    {
+        if (seedMapStart.isOn) seedInputStart.gameObject.SetActive(true);else seedInputStart.gameObject.SetActive(false);
+        if (seedMapStart.isOn) useSeed = true; else useSeed = false;
     }
 
     public void UpdateData()
@@ -100,9 +145,9 @@ public class GodsEye : MonoBehaviour
             a.DefineZoneByHum();
             //a.DefineZoneType();
             //a.DefineHumZone();
-            // a.DefineNoiseZone();
+            //a.DefineNoiseZone();
             //a.DefineHeatZone();
-            a.GeneraFlora();
+            //a.GeneraFlora();
             a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
         }
     }
@@ -112,7 +157,6 @@ public class GodsEye : MonoBehaviour
         mappa = a;
         seaAndSnow = humStart;
         HumMapUpdate();
-        ErrorHumUp();
     }
 
     
@@ -131,25 +175,20 @@ public class GodsEye : MonoBehaviour
                 {
                     if (b.calore <= 0.4f && b.calore > 0f && b.umidità < a.umidità - 0.1f)
                     {
-                        b.SetUmidità(a.umidità - 0.1f);
+                        b.SetUmidità(a.umidità - 0.1f);//1
                     }
                     else if (b.calore <= 0.7f && b.calore > 0.4f && b.umidità < a.umidità - 0.1f)
                     {
-                        b.SetUmidità(a.umidità - 0.1f);
-           
+                        b.SetUmidità(a.umidità - 0.1f);//1
+
                     }
                     else if (b.calore <= 0 && b.umidità < a.umidità - 0.2f)
                     {
-                        b.SetUmidità(a.umidità - 0.2f);
-                        
+                        b.SetUmidità(a.umidità - 0.2f);//2
+
                     }
                     else if (b.calore >= 1 && b.umidità < a.umidità - 0.4f)
                     {
-                        b.SetUmidità(a.umidità - 0.4f);
-                        
-                    }else
-                    {
-                        
                         b.SetUmidità(a.umidità - 0.4f);
                     }
                     b.humCheck = true;
@@ -197,11 +236,7 @@ public class GodsEye : MonoBehaviour
                         b.SetUmidità(a.umidità - 0.4f);
 
                     }
-                    else
-                    {
-                        
-                            b.SetUmidità(a.umidità - 0.4f);
-                    }
+
                     b.humCheck = true;
                     nextToHum.Add(b);
                 }
@@ -214,7 +249,97 @@ public class GodsEye : MonoBehaviour
             HumMapUpdate(nextToHum);
         }
     }
+    //////////////////////////////////////////////////////////////////////hum season update
+    public void HumMapSeasonUpdate()
+    {
 
+
+        List<Zone> nextToHum = new List<Zone>();
+        Debug.Log(seaAndSnow.Count);
+        foreach (Zone a in seaAndSnow)
+        {
+
+            foreach (Zone b in a.vicini)
+            {
+                if (b.humCheck == false)
+                {
+                    if (b.calore <= 0.4f && b.calore > 0f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);//1
+                    }
+                    else if (b.calore <= 0.7f && b.calore > 0.4f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);//1
+
+                    }
+                    else if (b.calore <= 0 && b.umidità < a.umidità - 0.2f)
+                    {
+                        b.SetUmidità(a.umidità - 0.2f);//2
+
+                    }
+                    else if (b.calore >= 1 && b.umidità < a.umidità - 0.4f)
+                    {
+                        b.SetUmidità(a.umidità - 0.4f);
+                    }
+                    b.humCheck = true;
+                    nextToHum.Add(b);
+                }
+
+            }
+        }
+        if (nextToHum.Count != 0)
+        {
+            Debug.Log("iterazione hum" + nextToHum.Count);
+            HumMapSeasonUpdate(nextToHum);
+        }
+
+    }
+    /// <summary>
+    /// Da effettuare 2 volta a stagione
+    /// </summary>
+    /// <param name="next">prossimi da controllare</param>
+    private void HumMapSeasonUpdate(List<Zone> next)
+    {
+        List<Zone> nextToHum = new List<Zone>();
+        foreach (Zone a in next)
+        {
+            foreach (Zone b in a.vicini)
+            {
+                if (b.humCheck == false)
+                {
+                    if (b.calore <= 0.4f && b.calore > 0f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);
+                    }
+                    else if (b.calore <= 0.7f && b.calore > 0.4f && b.umidità < a.umidità - 0.1f)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);
+
+                    }
+                    else if (b.calore <= 0 && b.umidità < a.umidità - 0.2f)
+                    {
+                        b.SetUmidità(a.umidità - 0.2f);
+
+                    }
+                    else if (b.calore >= 1 && b.umidità < a.umidità - 0.4f)
+                    {
+                        b.SetUmidità(a.umidità - 0.4f);
+
+                    }
+
+                    b.humCheck = true;
+                    nextToHum.Add(b);
+                }
+
+            }
+        }
+        if (nextToHum.Count != 0)
+        {
+            Debug.Log("iterazione hum" + nextToHum.Count);
+            HumMapSeasonUpdate(nextToHum);
+        }
+    }
+    //////////////////////////////////////////////////////////////////////
 
     /// <summary>
     /// Da effettuare 4 volta a stagione
@@ -247,24 +372,6 @@ public class GodsEye : MonoBehaviour
         HumMapUpdate();
     }
 
-
-    private void ErrorHumUp()
-    {
-        float max = 0f;
-        foreach (Zone a in mappa)
-        {
-            if (a.umidità == 0)
-            {
-                foreach (Zone b in a.vicini)
-                {
-                    if (b.umidità - 0.3 > max)
-                    {
-                        max = b.umidità - 0.3f;
-                    }
-                }
-            }
-        }
-    }
 
     public void HeatUpdate(float change)
     {

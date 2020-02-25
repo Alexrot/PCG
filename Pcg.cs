@@ -120,115 +120,143 @@ public class Pcg : MonoBehaviour
         ///tutti gli altri poligoni saranno acqua
         ///
         ///penisola non ha ragione di esistere nella configuarione attuale 
-        /*
-        if (penisola||side)
-        {
-            
-            int lati = 1;
-            if (penisola)
-            {
-                lati = 3;
-            }
-            int j = Random.Range(1, 4);
-            int dimP = 200;
-            int dimM = 400;
-            int dimG = 600;
 
-            if (penisola)
+
+
+       if (data.isola==3)
+       {
+            int size = 300;
+            List<Vector2> isole = new List<Vector2>();
+            for(int i=0;i<4; i++)
+            {
+                isole.Add(new Vector2(Random.Range(300, 1700), Random.Range(300, 1700)));
+            }
+
+            foreach (Vector2 a in isole)
             {
 
-                
-             //+++ 
-             //+++ 
-            //--- 
-             
-                if(j!=1)
-                    for (int x = 0; x < maxCanvas; x++)
-                    {
-                        for (int y = 0; y < dimP; y++)
-                        {
-                        mask[x, y] = mask[x, y] - 0.44f;
-                        }
-                        for (int y = 0; y < dimM && y>= dimP; y++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.30f;
-                        }
-                        for (int y = 0; y < dimG && y >= dimM; y++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.12f;
-                        }
-                    }
-                
-                   //*--- 
-                   //*+++ 
-                   //*+++ 
-                   
-                if (j != 2)
-                    for (int x = 0; x < maxCanvas; x++)
-                    {
-                        for (int y = maxCanvas-dimP; y < dimP; y++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.12f;
-                        }
-                        for (int y = maxCanvas - dimM; y < dimM && y >= dimP; y++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.30f;
-                        }
-                        for (int y = maxCanvas - dimG; y < dimG && y >= dimM; y++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.44f;
-                        }
-                    }
-                
-                    //*-++ 
-                    //*-++ 
-                    //*-++ 
-                    
-                if (j != 3)
+                for (int x = 0; x < maxCanvas; x++)
+                {
                     for (int y = 0; y < maxCanvas; y++)
                     {
-                        for (int x = 0; x < dimP; x++)
+                        if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 300, 2))
                         {
-                            mask[x, y] = mask[x, y] - 0.44f;
+                            if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 250, 2))
+                            {
+                                if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 200, 2))
+                                {
+                                    if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 150, 2))
+                                    {
+                                        if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 100, 2))
+                                        {
+
+                                            if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size, 2))
+                                            {
+                                                mask[x, y] = mask[x, y] + 0.1f;
+                                            }
+                                            else
+                                            {
+                                                mask[x, y] = mask[x, y] - (Random.Range(0, 0.02f));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mask[x, y] = mask[x, y] - (Random.Range(0.02f, 0.04f));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mask[x, y] = mask[x, y] - (Random.Range(0.04f, 0.6f));
+                                    }
+                                }
+                                else
+                                {
+                                    mask[x, y] = mask[x, y] - (Random.Range(0.6f, 0.8f));
+                                }
+                            }
+                            else
+                            {
+                                mask[x, y] = mask[x, y] - (Random.Range(0.8f, 0.1f));
+                            }
                         }
-                        for (int x = 0; x < dimM && x >= dimP; x++)
+                        else
                         {
-                            mask[x, y] = mask[x, y] - 0.30f;
-                        }
-                        for (int x = 0; x < dimG && x >= dimM; x++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.12f;
+                            mask[x, y] = mask[x, y] - (Random.Range(0.1f, 0.12f));
                         }
                     }
-                
-                   //*++- 
-                   //*++- 
-                   //++- 
-                   
-                if (j != 4)
-                    for (int y = 0; y < maxCanvas; y++)
-                    {
-                        for (int x = maxCanvas -dimP; x < maxCanvas; x++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.44f;
-                        }
-                        for (int x = maxCanvas - dimM; x < maxCanvas && x >= maxCanvas ; x++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.30f;
-                        }
-                        for (int x = maxCanvas - dimG; x < maxCanvas && x >= maxCanvas ; x++)
-                        {
-                            mask[x, y] = mask[x, y] - 0.12f;
-                        }
-                    }
+
+
+                }
+
             }
+                
             
-        }
-  */
+            
 
+            /*
+            foreach (Vector2 a in isole)
+            { 
+                int size = 400;
+                for (int x = 0; x < maxCanvas; x++)
+                {
+                    for (int y = 0; y < maxCanvas; y++)
+                    {
+                        if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 400, 2))
+                        {
+                            if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 300, 2))
+                            {
+                                if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 250, 2))
+                                {
+                                    if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 200, 2))
+                                    {
+                                        if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 150, 2))
+                                        {
 
+                                                if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size, 2))
+                                                {
+                                                    mask[x, y] = mask[x, y] + 0.1f;
+                                                }
+                                                else
+                                                {
+                                                    mask[x, y] = mask[x, y] - (Random.Range(0, 0.02f));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mask[x, y] = mask[x, y] - (Random.Range(0.02f, 0.04f));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mask[x, y] = mask[x, y] - (Random.Range(0.04f, 0.6f));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mask[x, y] = mask[x, y] - (Random.Range(0.6f, 0.8f));
+                                    }
+                                }
+                                else
+                                {
+                                    mask[x, y] = mask[x, y] - (Random.Range(0.8f, 0.1f));
+                                }
+                            }
+                            else
+                            {
+                                mask[x, y] = mask[x, y] - (Random.Range(0.1f, 0.12f));
+                            }
+                        }
+                        else
+                        {
+                            mask[x, y] = mask[x, y] - 0.14f;
+                        }
 
-       
+                    }
+                }
+
+            }*/
+
+       }
 
 
 

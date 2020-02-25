@@ -320,29 +320,13 @@ public class Zone
     {
         float pos =centro.y;
         calore=Math.Abs(1-(Math.Abs(pos - 1000)/1000));
-        /*
-        if (pos <= 1200 && pos >= 800)
-        {
-            calore = 1;//caldo
-        }
-        else if(pos <= 2000 && pos >= 1800 || pos <= 200 && pos >= 0)
-        {
-            calore = 0;//freddo
-        }
-        else if (pos <= 1800 && pos >= 1400 || pos <= 600 && pos >= 200)
-        {
-            calore = 0.4f;//temperato freddo
-        }
-        else if (pos <= 1400 && pos >= 1200|| pos <= 800 && pos >= 600)
-        {
-            calore = 0.7f;//temperato caldo
-        }
-        */
+
     }
 
     public void ChangeHeat(float change)
     {
-        if(typeBiome==2|| typeBiome == 3)
+        CalcolateHeatStart();
+        if (typeBiome==2|| typeBiome == 3)
         {
             change =change / 2;
         }
