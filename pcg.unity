@@ -2688,7 +2688,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 397
 --- !u!222 &826914920
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2797,8 +2797,8 @@ MonoBehaviour:
   styleMapStart: {fileID: 1315858339}
   seedMap: {fileID: 1361745847}
   seedMapStart: {fileID: 991012233}
-  seedInput: {fileID: 1399368791}
-  seedInputStart: {fileID: 562047807}
+  seedInput: {fileID: 1143695271}
+  seedInputStart: {fileID: 1792860756}
   autoSkip: 0
   polygonNumber: 2000
   useSeed: 1

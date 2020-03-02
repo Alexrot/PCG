@@ -26,6 +26,7 @@ public class Pcg : MonoBehaviour
      int octaveNumber;
      float persistance;
      float lacunarity;
+    public float[,] noise;
 
     List<Zone> mappa;
     List<Zone> humStart;
@@ -82,7 +83,7 @@ public class Pcg : MonoBehaviour
         List<Vector2> points = CreateRandomPoint(data.polygonNumber);
         voronoi = new Voronoi(points, bounds, 3);
         List<Node> poligonoUno = new List<Node>();
-        float[,] noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas, seed, scale, octaveNumber, persistance, lacunarity, new Vector2(maxCanvas / 2, maxCanvas / 2));
+        noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas, seed, scale, octaveNumber, persistance, lacunarity, new Vector2(maxCanvas / 2, maxCanvas / 2));
         noise = ApplyMask(noise);
         Transform dev;
         Zone devz;

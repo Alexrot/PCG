@@ -173,21 +173,26 @@ public class GodsEye : MonoBehaviour
             {
                 if (b.humCheck == false)
                 {
-                    if (b.calore <= 0.4f && b.calore > 0f && b.umidità < a.umidità - 0.1f)
+                    if (b.calore <= 0.4f && b.calore > 0f /*&& b.umidità < a.umidità - 0.1f*/)
                     {
                         b.SetUmidità(a.umidità - 0.1f);//1
                     }
-                    else if (b.calore <= 0.7f && b.calore > 0.4f && b.umidità < a.umidità - 0.1f)
+                    else if (b.calore <= 0.7f && b.calore > 0.4f/* && b.umidità < a.umidità - 0.1f*/)
                     {
                         b.SetUmidità(a.umidità - 0.1f);//1
 
                     }
-                    else if (b.calore <= 0 && b.umidità < a.umidità - 0.2f)
+                    else if (b.calore < 0.1f && b.calore > 0.7f/* && b.umidità < a.umidità - 0.1f*/)
+                    {
+                        b.SetUmidità(a.umidità - 0.1f);//1
+
+                    }
+                    else if (b.calore <= 0 /*&& b.umidità < a.umidità - 0.2f*/)
                     {
                         b.SetUmidità(a.umidità - 0.2f);//2
 
                     }
-                    else if (b.calore >= 1 && b.umidità < a.umidità - 0.4f)
+                    else if (b.calore >= 1/* && b.umidità < a.umidità - 0.4f*/)
                     {
                         b.SetUmidità(a.umidità - 0.4f);
                     }
@@ -217,24 +222,28 @@ public class GodsEye : MonoBehaviour
             {
                 if (b.humCheck == false)
                 {
-                    if (b.calore <= 0.4f && b.calore > 0f && b.umidità < a.umidità - 0.1f)
+                    if (b.calore <= 0.4f && b.calore > 0f /*&& b.umidità < a.umidità - 0.1f*/)
                     {
-                        b.SetUmidità(a.umidità - 0.1f);
+                        b.SetUmidità(a.umidità - 0.1f);//1
                     }
-                    else if (b.calore <= 0.7f && b.calore > 0.4f && b.umidità < a.umidità - 0.1f)
+                    else if (b.calore <= 0.7f && b.calore > 0.4f/* && b.umidità < a.umidità - 0.1f*/)
                     {
-                        b.SetUmidità(a.umidità - 0.1f);
+                        b.SetUmidità(a.umidità - 0.1f);//1
 
                     }
-                    else if (b.calore <= 0 && b.umidità < a.umidità - 0.2f)
+                    else if (b.calore < 0.1f && b.calore > 0.7f/* && b.umidità < a.umidità - 0.1f*/)
                     {
-                        b.SetUmidità(a.umidità - 0.2f);
+                        b.SetUmidità(a.umidità - 0.1f);//1
 
                     }
-                    else if (b.calore >= 1 && b.umidità < a.umidità - 0.4f)
+                    else if (b.calore <= 0 /*&& b.umidità < a.umidità - 0.2f*/)
+                    {
+                        b.SetUmidità(a.umidità - 0.2f);//2
+
+                    }
+                    else if (b.calore >= 1/* && b.umidità < a.umidità - 0.4f*/)
                     {
                         b.SetUmidità(a.umidità - 0.4f);
-
                     }
 
                     b.humCheck = true;
