@@ -19,6 +19,12 @@ public class Flora : MonoBehaviour
         
     }
 
+    public void MobVSFood(int n)
+    {
+        risorse -= n;
+    }
+
+
     /// <summary>
     /// genera una pianta nel poligono
     /// </summary>

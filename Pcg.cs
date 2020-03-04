@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,9 +13,9 @@ using UnityEngine.UI;
 
 public class Pcg : MonoBehaviour
 {
-    
+
     public Text tBase;
-    int maxCanvas; 
+    int maxCanvas;
 
     int nPoly;
 
@@ -22,10 +23,10 @@ public class Pcg : MonoBehaviour
 
     Triangulator tr;
     public int seed;
-     float scale;
-     int octaveNumber;
-     float persistance;
-     float lacunarity;
+    float scale;
+    int octaveNumber;
+    float persistance;
+    float lacunarity;
     public float[,] noise;
 
     List<Zone> mappa;
@@ -77,7 +78,7 @@ public class Pcg : MonoBehaviour
         {
             seed = data.seed;
         }
-            
+
         Rect bounds = new Rect(0, 0, maxCanvas, maxCanvas);
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(data.polygonNumber);
@@ -100,7 +101,7 @@ public class Pcg : MonoBehaviour
     }
 
 
-    private float[,] ApplyMask(float[,]  mask)
+    private float[,] ApplyMask(float[,] mask)
     {
 
         ///per la creazione di NoiseMask dobbiamo
@@ -124,11 +125,11 @@ public class Pcg : MonoBehaviour
 
 
 
-       if (data.isola==3)
-       {
+        if (data.isola == 3)
+        {
             int size = 300;
             List<Vector2> isole = new List<Vector2>();
-            for(int i=0;i<4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 isole.Add(new Vector2(Random.Range(300, 1700), Random.Range(300, 1700)));
             }
@@ -190,9 +191,9 @@ public class Pcg : MonoBehaviour
                 }
 
             }
-                
-            
-            
+
+
+
 
             /*
             foreach (Vector2 a in isole)
@@ -212,7 +213,6 @@ public class Pcg : MonoBehaviour
                                     {
                                         if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size + 150, 2))
                                         {
-
                                                 if (Math.Pow((x - a.x), 2) + Math.Pow((y - a.y), 2) < Math.Pow(size, 2))
                                                 {
                                                     mask[x, y] = mask[x, y] + 0.1f;
@@ -251,21 +251,19 @@ public class Pcg : MonoBehaviour
                         {
                             mask[x, y] = mask[x, y] - 0.14f;
                         }
-
                     }
                 }
-
             }*/
 
-       }
+        }
 
 
 
-        if (data.isola<3)
+        if (data.isola < 3)
         {
 
             int iterazioni = 0;
-            if (data.isola==0)
+            if (data.isola == 0)
             {
                 iterazioni = 800;
 
@@ -280,21 +278,21 @@ public class Pcg : MonoBehaviour
                 iterazioni = 400;
 
             }
-            for (int x=0;x<maxCanvas;x++)
+            for (int x = 0; x < maxCanvas; x++)
             {
-                for (int y=0;y<maxCanvas ;y++)
+                for (int y = 0; y < maxCanvas; y++)
                 {
-                    if(Math.Pow((x - 1000), 2)+ Math.Pow((y - 1000), 2)< Math.Pow(iterazioni+300, 2))
+                    if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 300, 2))
                     {
                         if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 250, 2))
                         {
-                            if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+200, 2))
+                            if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 200, 2))
                             {
-                                if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+150, 2))
+                                if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 150, 2))
                                 {
-                                    if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+100, 2))
+                                    if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 100, 2))
                                     {
-                                        if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni+50, 2))
+                                        if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni + 50, 2))
                                         {
                                             if (Math.Pow((x - 1000), 2) + Math.Pow((y - 1000), 2) < Math.Pow(iterazioni, 2))
                                             {
@@ -322,7 +320,7 @@ public class Pcg : MonoBehaviour
                             }
                             else
                             {
-                                mask[x, y] = mask[x, y] - (Random.Range(0.2f,0.25f));
+                                mask[x, y] = mask[x, y] - (Random.Range(0.2f, 0.25f));
                             }
                         }
                         else
@@ -337,9 +335,9 @@ public class Pcg : MonoBehaviour
                 }
             }
 
-            
 
-            
+
+
 
         }
         return mask;
@@ -365,7 +363,7 @@ public class Pcg : MonoBehaviour
 
     public void DetectHum()
     {
-        
+
         List<Zone> humNext = new List<Zone>();
         foreach (Zone a in mappa)
         {
@@ -373,13 +371,14 @@ public class Pcg : MonoBehaviour
             {
                 a.SetUmidità(1);
                 humStart.Add(a);
-            } else if(a.typeBiome == 12 || a.typeBiome == 11)
+            }
+            else if (a.typeBiome == 12 || a.typeBiome == 11)
             {
                 a.SetUmidità(0.7f);
                 humStart.Add(a);
             }
         }
-       
+
     }
 
     private List<Vector2> CreateRandomPoint(int polygonNumber)

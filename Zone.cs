@@ -1,9 +1,10 @@
-﻿using System;
+﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Zone 
+public class Zone
 {
     public GameObject polyGO;
     Transform poly;
@@ -14,10 +15,11 @@ public class Zone
     public float calore;
     public int typeBiome;
     public List<Zone> vicini;
-    public bool humCheck =false;
+    public bool humCheck = false;
 
-    public bool mobIn=false;
-    public Fauna mob;
+    public bool mobIn = false;
+    public List<Fauna> mob;
+    
 
     public Flora risorse;
     public bool food = false;
@@ -33,21 +35,23 @@ public class Zone
         poly = segmento;
         CalcolateHeatStart();
         DefineZoneByHum();
-       
-        polyGO =poly.gameObject;
 
-        risorse = new Flora();
+        polyGO = poly.gameObject;
+
+        mob = new List<Fauna>();
         
+        risorse = new Flora();
+
     }
 
 
 
     private int CalcolateSize()
     {
-        float size=0;
-        foreach(Vector2 a in poligono)
+        float size = 0;
+        foreach (Vector2 a in poligono)
         {
-            size +=(Math.Abs(a.x - centro.x) + Math.Abs(a.y - centro.y));
+            size += (Math.Abs(a.x - centro.x) + Math.Abs(a.y - centro.y));
         }
         size = size * 100;
         return (int)size;
@@ -68,14 +72,15 @@ public class Zone
         {
             umidità = 0.01f;
         }
-        else if (umidità>1)
+        else if (umidità > 1)
         {
             umidità = 1f;
-        }else
+        }
+        else
         {
             this.umidità = umidità;
         }
-        
+
         humCheck = true;
 
     }
@@ -127,7 +132,7 @@ public class Zone
             typeBiome = 6;
             poly.GetComponent<Renderer>().material.color = Color.gray;
         }
-        else if (altezza > 0.9 )
+        else if (altezza > 0.9)
         {
             //type 7 ice
             typeBiome = 7;
@@ -143,6 +148,8 @@ public class Zone
     {
         poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.Lerp(Color.white, Color.blue, 0.01f), Color.blue, umidità);
     }
+
+
 
     /// <summary>
     /// Definisce il poligono in base alla noise
@@ -168,7 +175,7 @@ public class Zone
     /// </summary>
     public void DefineZoneByHum()
     {
-       
+
         //3 layer
         if (altezza <= 0.45)
         {
@@ -185,7 +192,7 @@ public class Zone
             }
             if (calore <= 0.20)
             {
-                if (altezza <0.10)
+                if (altezza < 0.10)
                 {
                     poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.Lerp(Color.gray, Color.blue, 0.55f), 0.35f);
                     typeBiome = 3;
@@ -194,7 +201,7 @@ public class Zone
                 {
                     poly.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.blue, 0.35f);
                     typeBiome = 2;
-                }              
+                }
             }
         }
         else if (altezza <= 0.65 && altezza > 0.45)///altezza 0 sopra il livello del mare
@@ -264,19 +271,19 @@ public class Zone
             }
 
         }
-        if (altezza > 0.45&&calore==0)
+        if (altezza > 0.45 && calore == 0)
         {
-            poly.GetComponent<Renderer>().material.color = Color.Lerp(poly.GetComponent<Renderer>().material.color, Color.Lerp(Color.blue, Color.white  , 0.65f), 0.65f);
+            poly.GetComponent<Renderer>().material.color = Color.Lerp(poly.GetComponent<Renderer>().material.color, Color.Lerp(Color.blue, Color.white, 0.65f), 0.65f);
         }
     }
 
-        /// <summary>
-        /// Calcola la temperatura del poligono in base alla sua posizione nella mappa
-        /// </summary>
+    /// <summary>
+    /// Calcola la temperatura del poligono in base alla sua posizione nella mappa
+    /// </summary>
     void CalcolateHeatStart()
     {
-        float pos =centro.y;
-        calore=Math.Abs(1-(Math.Abs(pos - 1000)/1000));
+        float pos = centro.y;
+        calore = Math.Abs(1 - (Math.Abs(pos - 1000) / 1000));
 
     }
 
@@ -284,14 +291,15 @@ public class Zone
     {
 
         CalcolateHeatStart();
-        if (typeBiome==2|| typeBiome == 3)
+        if (typeBiome == 2 || typeBiome == 3)
         {
-            change =change / 2;
+            change = change / 2;
         }
-        if(calore + change > 1)
+        if (calore + change > 1)
         {
             calore = 1;
-        }else if(calore + change < 0)
+        }
+        else if (calore + change < 0)
         {
             calore = 0;
         }
@@ -299,7 +307,7 @@ public class Zone
         {
             calore = calore + change;
         }
-        
+
 
     }
 
@@ -353,16 +361,35 @@ public class Zone
     }
 
     ///////////////////////////////////////////////FAUNA//////////////////////////////////////////////////
-    public void UscitaMob()
+    public void UscitaMob(Fauna a)
     {
-        mobIn = false;
-        mob = null;
+        mob.Remove(a);
+        if(mob.Count==0) mobIn = false;
     }
 
     public void EntrataMob(Fauna entity)
     {
         mobIn = true;
-        mob = entity;
+        mob.Add(entity);
     }
 
+    public Fauna GenateMob(Fauna progenitore)
+    {
+        Fauna prole = progenitore.Spawn(this);
+        mob.Add(prole);
+        return prole;
+    }
+
+    public bool SpawnChance()
+    {
+        bool risp = false;
+        if (altezza < 0.85 && altezza > 0.45)
+        {
+            if (umidità > 0.32)
+            {
+                risp = true;
+            }
+        }
+        return risp;
+    }
 }

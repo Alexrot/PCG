@@ -32,6 +32,10 @@ public class GodsEye : MonoBehaviour
 
     Age time;
 
+    Fauna adamoEdEva;
+    List<Fauna> mob;
+    int maxMob=0;
+
 
     public bool autoSkip=false;
     public int polygonNumber;
@@ -48,6 +52,7 @@ public class GodsEye : MonoBehaviour
     {
         showAtStart.gameObject.SetActive(false);
 
+        
 
         data = new MapData();
         mappa = new List<Zone>();
@@ -64,9 +69,24 @@ public class GodsEye : MonoBehaviour
         seedMapStart.onValueChanged.AddListener(delegate {
             ToggleSeedTextStart(seedMapStart);
         });
-        
+         adamoEdEva= new Fauna();
+
+
     }
 
+
+    public void CheckEaten(Fauna def)
+    {
+        if (def.numEntità < 1)
+        {
+            Estinzione(def);
+        }
+    }
+
+    public void Estinzione(Fauna ex)
+    {
+        mob.Remove(ex);
+    }
     
     
     public void NewMap()
@@ -88,6 +108,21 @@ public class GodsEye : MonoBehaviour
         mondo.Generate(this, poligono, data);
         seedShow.text = "" + data.seed;
 
+        mob = new List<Fauna>();
+        GenerateEntity();
+    }
+
+    private void GenerateEntity()
+    {
+        maxMob = 0;
+        foreach (Zone a in mappa)
+            a.GeneraFlora();
+        foreach(Zone a in mappa)
+        if (UnityEngine.Random.Range(0, 4) == 0 && maxMob < 20 && a.SpawnChance())
+        {
+            mob.Add(a.GenateMob(adamoEdEva));
+            maxMob++;
+        }
     }
 
     void NextSeason()
@@ -125,6 +160,7 @@ public class GodsEye : MonoBehaviour
         
     }
 
+
     void ToggleSeedText(Toggle t)
     {
         if (seedMap.isOn) seedInput.gameObject.SetActive(true); else seedInput.gameObject.SetActive(false);
@@ -147,7 +183,7 @@ public class GodsEye : MonoBehaviour
             //a.DefineHumZone();
             //a.DefineNoiseZone();
             //a.DefineHeatZone();
-            //a.GeneraFlora();
+
             a.polyGO.GetComponent<PolygonInteraction>().UpdateData();
         }
     }
@@ -254,7 +290,7 @@ public class GodsEye : MonoBehaviour
         }
         if (nextToHum.Count != 0)
         {
-            Debug.Log("iterazione hum"+ nextToHum.Count);
+            //Debug.Log("iterazione hum"+ nextToHum.Count);
             HumMapUpdate(nextToHum);
         }
     }
