@@ -14,8 +14,15 @@ public class Fauna : MonoBehaviour
 
     GodsEye god;
 
+    void Start()
+    {
+        
+    }
+
     public Fauna Spawn(Zone nido)
     {
+        visitato = new List<Zone>();
+        
         numEntità = UnityEngine.Random.Range(2, 5);
         if (UnityEngine.Random.Range(0, 1) == 0)
         {
@@ -28,10 +35,8 @@ public class Fauna : MonoBehaviour
             ciboNecessario = numEntità*2;
         }     
         accampamento = nido;
-        visitato.Add(nido);
-        /////
-        //////
-        ///ERROREEEEEEEEEEEEEEEEEEEEEEE
+        visitato.Add(accampamento);
+
         return this;
     }
 
@@ -48,8 +53,9 @@ public class Fauna : MonoBehaviour
         }
     }
 
-    void Eat()
+    public void Eat()
     {
+        Debug.Log(accampamento.centro);
         while(accampamento.GetFood() == 0|| !accampamento.food)
         {
             if(!passive&& accampamento.mob.Count > 1)

@@ -74,6 +74,22 @@ public class GodsEye : MonoBehaviour
 
     }
 
+    public void UpdateMob()
+    {
+        Debug.Log("dinner");
+        foreach (Zone a in mappa)
+        {
+            if (a.mobIn)
+            {
+                foreach(Fauna b in a.mob)
+                {
+                    Debug.Log("pappaaaaaaaaaaaaaaaaaaaaa");
+                    b.Eat();
+                }
+                
+            }
+        }
+    }
 
     public void CheckEaten(Fauna def)
     {
@@ -178,7 +194,7 @@ public class GodsEye : MonoBehaviour
     {
         foreach (Zone a in mappa)
         {
-            a.DefineZoneByHum();
+            //a.DefineZoneByHum();
             //a.DefineZoneType();
             //a.DefineHumZone();
             //a.DefineNoiseZone();
@@ -201,7 +217,7 @@ public class GodsEye : MonoBehaviour
 
 
         List<Zone> nextToHum = new List<Zone>();
-        Debug.Log(seaAndSnow.Count);
+        //Debug.Log(seaAndSnow.Count);
         foreach (Zone a in seaAndSnow)
         {
 

@@ -175,6 +175,7 @@ public class Zone
     /// </summary>
     public void DefineZoneByHum()
     {
+        Debug.Log("colore");
 
         //3 layer
         if (altezza <= 0.45)
@@ -275,6 +276,7 @@ public class Zone
         {
             poly.GetComponent<Renderer>().material.color = Color.Lerp(poly.GetComponent<Renderer>().material.color, Color.Lerp(Color.blue, Color.white, 0.65f), 0.65f);
         }
+        Debug.Log("colore"+typeBiome);
     }
 
     /// <summary>
@@ -314,7 +316,7 @@ public class Zone
     ///////////////////////////////////////////////FLORA////////////////////////////////////////////////////////////
     public void SpawnFood()
     {
-        risorse.Spaw();
+        risorse.Spawn();
     }
 
     public int GetFood()
@@ -392,4 +394,6 @@ public class Zone
         }
         return risp;
     }
+
+
 }

@@ -41,6 +41,8 @@ public class Age : MonoBehaviour
             case 1:
                 for (int i = 0; i < 4; i++)
                 {
+                    god.UpdateMob();
+                    
                     god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
@@ -54,6 +56,7 @@ public class Age : MonoBehaviour
             case 2:
                 for (int i = 0; i < 4; i++)
                 {
+                    god.UpdateMob();
                     god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
@@ -67,6 +70,7 @@ public class Age : MonoBehaviour
             case 3:
                 for (int i = 0; i < 4; i++)
                 {
+                    god.UpdateMob();
                     god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {
@@ -80,6 +84,7 @@ public class Age : MonoBehaviour
             case 4:
                 for (int i = 0; i < 4; i++)
                 {
+                    god.UpdateMob();
                     god.PlantMapEvo(currentSeason);
                     if (i == 1 || i == 3)
                     {

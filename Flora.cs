@@ -58,7 +58,7 @@ public class Flora : MonoBehaviour
         season = UnityEngine.Random.Range(1, 4);
     }
 
-    public void Spaw()
+    public void Spawn()
     {
         risorse += UnityEngine.Random.Range(spawMin, spawMax);
         if (risorse > limite)

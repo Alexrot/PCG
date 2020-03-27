@@ -83,7 +83,7 @@ public class Pcg : MonoBehaviour
         //punti randomici NON QUELLI DA UTILIZZARE
         List<Vector2> points = CreateRandomPoint(data.polygonNumber);
         voronoi = new Voronoi(points, bounds, 3);
-        List<Node> poligonoUno = new List<Node>();
+        //List<Node> poligonoUno = new List<Node>();
         noise = Noise.GenerateNoiseMap(maxCanvas, maxCanvas, seed, scale, octaveNumber, persistance, lacunarity, new Vector2(maxCanvas / 2, maxCanvas / 2));
         noise = ApplyMask(noise);
         Transform dev;
